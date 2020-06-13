@@ -192,7 +192,7 @@ namespace MineSweeper
                                         else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
                                         else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
                                         else if (count[p.X, p.Y] > 3) box[p.X, p.Y].ForeColor = Color.Purple;
-                                        box[x, y].Text = "" + count[x, y];
+                                        box[x, y].Text = count[x, y].ToString();
                                     }
                                 }
                             else
@@ -237,32 +237,27 @@ namespace MineSweeper
                         for (int j = 0; j < 2; j++)
                             for (int y = p.Y - 1; y < p.Y + 2; y++)
                                 for (int x = p.X - 1; x < p.X + 2 && !gameOver; x++)
-                                    try
+                                {
+                                    smartClick = 0;
+                                    if (j == 0 && box[x, y].Text == "F")
                                     {
-                                        smartClick = 0;
-                                        if (j == 0 && box[x, y].Text == "F")
-                                        {
-                                            smartClick++;
-                                        }
-                                        else if (j == 1 && smartClick == count[p.X, p.Y])
-                                        {
-                                            if (box[x, y].BackColor != BackColor)
-                                            {
-                                                box[x, y].BackColor = BackColor;
-                                                box[x, y].ForeColor = Revealed(box[x, y].Text);
-                                            }
-                                            if (isMine[x, y])
-                                            {
-                                                box[x, y].BackColor = Color.Red;
-                                                gameOver = true;
-                                            }
-
-                                        }
+                                        smartClick++;
                                     }
-                                    catch
+                                    else if (j == 1 && smartClick == count[p.X, p.Y])
                                     {
+                                        if (box[x, y].BackColor != BackColor)
+                                        {
+                                            box[x, y].BackColor = BackColor;
+                                            box[x, y].ForeColor = Revealed(int.Parse(box[x, y].Text));
+                                        }
+                                        if (isMine[x, y])
+                                        {
+                                            box[x, y].BackColor = Color.Red;
+                                            gameOver = true;
+                                        }
 
                                     }
+                                }
 
                     if (b.BackColor != BackColor)
                         b.BackColor = BackColor;
@@ -274,7 +269,21 @@ namespace MineSweeper
                         gameOver = true;
                     }
 
-                    if (gameOver)
+                    if (!gameOver)
+                    {
+                        if (b.Text == "0")
+                        {
+
+                            Sweeped(p.X, p.Y);
+                        }
+                        else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
+                        else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
+                        else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
+                        else if (count[p.X, p.Y] >= 4) box[p.X, p.Y].ForeColor = Color.Purple;
+                        b.ForeColor = BackColor;
+                    }
+
+                    else
                     {
                         for (int y = 0; y < h; y++)
                         {
@@ -297,19 +306,7 @@ namespace MineSweeper
                         GameStatus.BackColor = Color.Red;
                     }
 
-                    else
-                    {
-                        if (b.Text == "0")
-                        {
-
-                            Sweeped(p.X, p.Y);
-                        }
-                        else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
-                        else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
-                        else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
-                        else if (count[p.X, p.Y] >= 4) box[p.X, p.Y].ForeColor = Color.Purple;
-                        b.ForeColor = BackColor;
-                    }
+                    
 
                     int revealed = 0;
                     for (int y = 0; y < h; y++)
@@ -341,40 +338,6 @@ namespace MineSweeper
             }
         }
 
-        void Sweeped()
-        {
-            uint counter = int.MaxValue;
-            int stuff = 0;
-
-            if (!first)
-                while (counter > 0)
-                {
-                    counter = 0;
-                    for (int y = 0; y < h; y++)
-                        for (int x = 0; x < w; x++)
-                            if (box[x, y].Text != "F")
-                                for (int a = -1; a < 2; a++)
-                                    for (int o = -1; o < 2; o++)
-                                        try
-                                        {
-                                            if (
-                                                box[x + o, y + a].BackColor == BackColor &&
-                                                box[x + o, y + a].Text == "0"
-                                                )
-                                            {
-                                                box[x, y].BackColor = BackColor;
-                                                box[x, y].ForeColor = Revealed(box[x, y].Text);
-                                                a = 2;
-                                                o = 2;
-                                                counter++;
-                                                stuff++;
-                                            }
-                                        }
-                                        catch { }
-                }
-            if (true) { }
-        }
-
         void Sweeped(int x, int y)
         {
             if (box[x, y].Text == "F") { return; }
@@ -383,7 +346,7 @@ namespace MineSweeper
                 box[x, y].Text == "0")
             {
                 box[x, y].BackColor = BackColor;
-                box[x, y].ForeColor = Revealed(box[x, y].Text);
+                box[x, y].ForeColor = Revealed(int.Parse(box[x, y].Text));
             }
             else return;
 
@@ -398,31 +361,6 @@ namespace MineSweeper
                     catch { }
                 }
             }
-        }
-
-        Color Revealed(string Component)
-        {
-            int c;
-            Color[] palette =
-            {
-                BackColor,
-                Color.LightBlue,
-                Color.Green,
-                Color.Red,
-                Color.Purple,
-            };
-
-            try
-            {
-                c = int.Parse(Component);
-            }
-            catch
-            {
-                return new Color();
-            }
-            for (int g = 0; g < 4; g++)
-                if (c == g) return palette[g];
-            return Color.Purple;
         }
 
         Color Revealed(int Component)
