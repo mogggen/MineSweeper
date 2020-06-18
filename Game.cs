@@ -10,8 +10,8 @@ namespace MineSweeper
         int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
-        //Point[] d = { new Point(10, 10), new Point(15, 30) };
-        Button[,] box; // The boxes 
+        Button[,] box; // The boxes
+
         bool[,] isMine;
         bool gameOver = false;
         int revealed = 0;
@@ -19,7 +19,6 @@ namespace MineSweeper
         bool first = true, replay = false; // 
         int flags = 0; // Amount of flags.
         int[,] count; // The Number of adjacent mines for each box.
-        int smartClick; // Reveals the adjacent boxes if the number of surrounding bombs are flagged.
 
         private void GameStatus_Click(object sender, EventArgs e)
         {
@@ -148,7 +147,7 @@ namespace MineSweeper
                     {
                         ned = rand.Next(h);
                         sid = rand.Next(w);
-                        if (isMine[sid, ned] == false && (p.Y != ned || p.X != sid))
+                        if (!isMine[sid, ned] && (p.Y != ned || p.X != sid))
                         {
                             isMine[sid, ned] = true;
                             box[sid, ned].Text = "X";
@@ -160,105 +159,73 @@ namespace MineSweeper
                     {
                         b.BackColor = BackColor;
 
-                        for (int j = 0; j < 2; j++)
+                        for (int y = 0; y < h; y++)
                         {
-                            if (j == 0)
-                                for (int y = 0; y < h; y++)
+                            for (int x = 0; x < w; x++)
+                            {
+                                count[x, y] = 0;
+
+                                for (int xx = -1; xx < 2; xx++)
                                 {
-                                    for (int x = 0; x < w; x++)
+                                    for (int yy = -1; yy < 2; yy++)
                                     {
-                                        count[x, y] = 0;
-
-                                        for (int xx = -1; xx < 2; xx++)
+                                        try
                                         {
-                                            for (int yy = -1; yy < 2; yy++)
-                                            {
-                                                try
-                                                {
-                                                    if (isMine[x + xx, y + yy] && (xx != 0 || yy != 0)) count[x, y]++;
-                                                }
-                                                catch { }
-                                            }
+                                            if (isMine[x + xx, y + yy] && (xx != 0 || yy != 0)) count[x, y]++;
                                         }
-
-                                        first = false;
-                                        box[x, y].ForeColor = box[x, y].BackColor;
-                                        if (count[p.X, p.Y] == 0)
-                                        {
-                                            box[p.X, p.Y].ForeColor = BackColor;
-
-                                        }
-                                        else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
-                                        else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
-                                        else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
-                                        else if (count[p.X, p.Y] > 3) box[p.X, p.Y].ForeColor = Color.Purple;
-                                        box[x, y].Text = count[x, y].ToString();
+                                        catch { }
                                     }
                                 }
-                            else
-                            {
-                                Sweep(p.X, p.Y);
 
-                                revealed = 0;
-                                for (int y = 0; y < h; y++)
-                                    for (int x = 0; x < w; x++)
-                                        if (box[x, y].BackColor == BackColor)
-                                            revealed++;
-
-                                if (revealed == w * h - mines)
+                                first = false;
+                                box[x, y].ForeColor = box[x, y].BackColor;
+                                if (count[p.X, p.Y] == 0)
                                 {
-                                    for (int y = 0; y < h; y++)
-                                    {
-                                        for (int x = 0; x < w; x++)
-                                        {
-                                            if (isMine[x, y] && box[x, y].Text != "F")
-                                            {
-                                                box[x, y].ForeColor = Color.Red;
-                                                flags++;
-                                                box[x, y].Text = "F";
+                                    box[p.X, p.Y].ForeColor = BackColor;
 
-                                            }
-                                        }
+                                }
+                                else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
+                                else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
+                                else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
+                                else if (count[p.X, p.Y] > 3) box[p.X, p.Y].ForeColor = Color.Purple;
+                                box[x, y].Text = count[x, y].ToString();
+                            }
+                        }
+
+                        Sweep(p.X, p.Y);
+
+                        revealed = 0;
+                        for (int y = 0; y < h; y++)
+                            for (int x = 0; x < w; x++)
+                                if (box[x, y].BackColor == BackColor)
+                                    revealed++;
+
+                        if (revealed == w * h - mines)
+                        {
+                            for (int y = 0; y < h; y++)
+                            {
+                                for (int x = 0; x < w; x++)
+                                {
+                                    if (isMine[x, y] && box[x, y].Text != "F")
+                                    {
+                                        box[x, y].ForeColor = Color.Red;
+                                        flags++;
+                                        box[x, y].Text = "F";
+
                                     }
-                                    label1.Text = $"mines flagged:\n{flags} / {mines}";
-                                    label2.Visible = true;
-                                    label2.Text = "You Win!";
-                                    GameStatus.BackColor = Color.Green;
-                                    gameOver = true;
                                 }
                             }
+                            label1.Text = $"mines flagged:\n{flags} / {mines}";
+                            label2.Visible = true;
+                            label2.Text = "You Win!";
+                            GameStatus.BackColor = Color.Green;
+                            gameOver = true;
                         }
                     }
                 }
 
                 else
                 {
-                    //if (b.BackColor == BackColor && int.Parse(b.Text) > 0)
-                    //    for (int j = 0; j < 2; j++)
-                    //        for (int y = p.Y - 1; y < p.Y + 2; y++)
-                    //            for (int x = p.X - 1; x < p.X + 2 && !gameOver; x++)
-                    //            {
-                    //                smartClick = 0;
-                    //                if (j == 0 && box[x, y].Text == "F")
-                    //                {
-                    //                    smartClick++;
-                    //                }
-                    //                else if (j == 1 && smartClick == count[p.X, p.Y])
-                    //                {
-                    //                    if (box[x, y].BackColor != BackColor)
-                    //                    {
-                    //                        box[x, y].BackColor = BackColor;
-                    //                        box[x, y].ForeColor = Revealed(int.Parse(box[x, y].Text));
-                    //                    }
-                    //                    if (isMine[x, y])
-                    //                    {
-                    //                        box[x, y].BackColor = Color.Red;
-                    //                        gameOver = true;
-                    //                    }
-                    //                }
-                    //            }
-
-
                     if (isMine[p.X, p.Y])
                     {
                         b.BackColor = Color.Red;
@@ -267,10 +234,7 @@ namespace MineSweeper
 
                     if (!gameOver)
                     {
-                        if (b.Text != "F")
-                        {
-                            Sweep(p.X, p.Y);
-                        }
+                        Sweep(p.X, p.Y);
                     }
 
                     else
@@ -296,33 +260,35 @@ namespace MineSweeper
                         GameStatus.BackColor = Color.Red;
                     }
 
-
                     //check for win
-                    int revealed = 0;
-                    for (int y = 0; y < h; y++)
-                        for (int x = 0; x < w; x++)
-                            if (box[x, y].BackColor == BackColor)
-                                revealed++;
-
-                    if (revealed == w * h - mines && !isMine[p.X, p.Y])
+                    if (!first)
                     {
+                        int revealed = 0;
                         for (int y = 0; y < h; y++)
-                        {
                             for (int x = 0; x < w; x++)
+                                if (box[x, y].BackColor == BackColor)
+                                    revealed++;
+
+                        if (revealed == w * h - mines && !isMine[p.X, p.Y])
+                        {
+                            for (int y = 0; y < h; y++)
                             {
-                                if (isMine[x, y] && box[x, y].Text != "F")
+                                for (int x = 0; x < w; x++)
                                 {
-                                    box[x, y].ForeColor = Color.Red;
-                                    flags++;
-                                    box[x, y].Text = "F";
-                                    label1.Text = $"mines flagged:\n{flags} / {mines}";
+                                    if (isMine[x, y] && box[x, y].Text != "F")
+                                    {
+                                        box[x, y].ForeColor = Color.Red;
+                                        flags++;
+                                        box[x, y].Text = "F";
+                                        label1.Text = $"mines flagged:\n{flags} / {mines}";
+                                    }
                                 }
                             }
+                            label2.Visible = true;
+                            label2.Text = "You Win!";
+                            GameStatus.BackColor = Color.Green;
+                            gameOver = true;
                         }
-                        label2.Visible = true;
-                        label2.Text = "You Win!";
-                        GameStatus.BackColor = Color.Green;
-                        gameOver = true;
                     }
                 }
             }
