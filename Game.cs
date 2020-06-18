@@ -233,31 +233,30 @@ namespace MineSweeper
 
                 else
                 {
-                    if (b.BackColor == BackColor && int.Parse(b.Text) > 0)
-                        for (int j = 0; j < 2; j++)
-                            for (int y = p.Y - 1; y < p.Y + 2; y++)
-                                for (int x = p.X - 1; x < p.X + 2 && !gameOver; x++)
-                                {
-                                    smartClick = 0;
-                                    if (j == 0 && box[x, y].Text == "F")
-                                    {
-                                        smartClick++;
-                                    }
-                                    else if (j == 1 && smartClick == count[p.X, p.Y])
-                                    {
-                                        if (box[x, y].BackColor != BackColor)
-                                        {
-                                            box[x, y].BackColor = BackColor;
-                                            box[x, y].ForeColor = Revealed(int.Parse(box[x, y].Text));
-                                        }
-                                        if (isMine[x, y])
-                                        {
-                                            box[x, y].BackColor = Color.Red;
-                                            gameOver = true;
-                                        }
-
-                                    }
-                                }
+                    //if (b.BackColor == BackColor && int.Parse(b.Text) > 0)
+                    //    for (int j = 0; j < 2; j++)
+                    //        for (int y = p.Y - 1; y < p.Y + 2; y++)
+                    //            for (int x = p.X - 1; x < p.X + 2 && !gameOver; x++)
+                    //            {
+                    //                smartClick = 0;
+                    //                if (j == 0 && box[x, y].Text == "F")
+                    //                {
+                    //                    smartClick++;
+                    //                }
+                    //                else if (j == 1 && smartClick == count[p.X, p.Y])
+                    //                {
+                    //                    if (box[x, y].BackColor != BackColor)
+                    //                    {
+                    //                        box[x, y].BackColor = BackColor;
+                    //                        box[x, y].ForeColor = Revealed(int.Parse(box[x, y].Text));
+                    //                    }
+                    //                    if (isMine[x, y])
+                    //                    {
+                    //                        box[x, y].BackColor = Color.Red;
+                    //                        gameOver = true;
+                    //                    }
+                    //                }
+                    //            }
 
                     if (b.BackColor != BackColor)
                         b.BackColor = BackColor;
