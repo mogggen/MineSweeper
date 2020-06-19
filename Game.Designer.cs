@@ -30,8 +30,8 @@
         {
             this.GameStatus = new System.Windows.Forms.PictureBox();
             this.NudBombCounter = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.LblMineCounter = new System.Windows.Forms.Label();
+            this.LblGameStatus = new System.Windows.Forms.Label();
             this.Help = new System.Windows.Forms.Button();
             this.btnReplay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).BeginInit();
@@ -49,7 +49,7 @@
             this.GameStatus.TabStop = false;
             this.GameStatus.Click += new System.EventHandler(this.GameStatus_Click);
             // 
-            // numericUpDown1
+            // NudBombCounter
             // 
             this.NudBombCounter.Location = new System.Drawing.Point(170, 87);
             this.NudBombCounter.Maximum = new decimal(new int[] {
@@ -57,7 +57,7 @@
             0,
             0,
             0});
-            this.NudBombCounter.Name = "numericUpDown1";
+            this.NudBombCounter.Name = "NudBombCounter";
             this.NudBombCounter.Size = new System.Drawing.Size(38, 20);
             this.NudBombCounter.TabIndex = 1;
             this.NudBombCounter.Value = new decimal(new int[] {
@@ -66,28 +66,28 @@
             0,
             0});
             // 
-            // label1
+            // LblMineCounter
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(330, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 58);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Mines flagged:\r\n0 / 16";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LblMineCounter.AutoSize = true;
+            this.LblMineCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblMineCounter.ForeColor = System.Drawing.Color.Red;
+            this.LblMineCounter.Location = new System.Drawing.Point(330, 36);
+            this.LblMineCounter.Name = "LblMineCounter";
+            this.LblMineCounter.Size = new System.Drawing.Size(185, 58);
+            this.LblMineCounter.TabIndex = 2;
+            this.LblMineCounter.Text = "Mines flagged:\r\n0 / 16";
+            this.LblMineCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // LblGameStatus
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(197, 527);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 29);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "You Win!";
+            this.LblGameStatus.AutoSize = true;
+            this.LblGameStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGameStatus.ForeColor = System.Drawing.Color.Red;
+            this.LblGameStatus.Location = new System.Drawing.Point(197, 527);
+            this.LblGameStatus.Name = "LblGameStatus";
+            this.LblGameStatus.Size = new System.Drawing.Size(117, 29);
+            this.LblGameStatus.TabIndex = 3;
+            this.LblGameStatus.Text = "You Win!";
             // 
             // Help
             // 
@@ -117,8 +117,8 @@
             this.ClientSize = new System.Drawing.Size(561, 592);
             this.Controls.Add(this.btnReplay);
             this.Controls.Add(this.Help);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LblGameStatus);
+            this.Controls.Add(this.LblMineCounter);
             this.Controls.Add(this.NudBombCounter);
             this.Controls.Add(this.GameStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -135,8 +135,8 @@
 
         private System.Windows.Forms.PictureBox GameStatus;
         private System.Windows.Forms.NumericUpDown NudBombCounter;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LblMineCounter;
+        private System.Windows.Forms.Label LblGameStatus;
         private System.Windows.Forms.Button Help;
         private System.Windows.Forms.Button btnReplay;
     }

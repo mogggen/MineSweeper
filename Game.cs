@@ -28,8 +28,8 @@ namespace MineSweeper
             revealed = 0;
             mines = (int)NudBombCounter.Value;
             GameStatus.BackColor = Color.LightGray;
-            label1.Text = $"mines flagged:\n{flags} / {mines}";
-            label2.Visible = false;
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblGameStatus.Visible = false;
 
             for (int y = 0; y < h; y++)
             {
@@ -60,8 +60,8 @@ namespace MineSweeper
             count = new int[w, h];
             isMine = new bool[w, h];
             NudBombCounter.Value = mines;
-            label1.Text = $"mines flagged:\n{flags} / {mines}";
-            label2.Visible = false;
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblGameStatus.Visible = false;
 
             for (int y = 0; y < h; y++)
             {
@@ -91,8 +91,8 @@ namespace MineSweeper
             flags = 0;
             revealed = 0;
             GameStatus.BackColor = Color.LightGray;
-            label1.Text = $"mines flagged:\n{flags} / {mines}";
-            label2.Visible = false;
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblGameStatus.Visible = false;
 
             for (int y = 0; y < h; y++)
             {
@@ -134,7 +134,7 @@ namespace MineSweeper
                     flags--;
                     b.Text = "" + count[p.X, p.Y];
                 }
-                label1.Text = $"mines flagged:\n{flags} / {mines}";
+                LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             }
 
             if (MouseButtons == MouseButtons.Left && b.Text != "F" && !gameOver)
@@ -215,9 +215,9 @@ namespace MineSweeper
                                     }
                                 }
                             }
-                            label1.Text = $"mines flagged:\n{flags} / {mines}";
-                            label2.Visible = true;
-                            label2.Text = "You Win!";
+                            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                            LblGameStatus.Visible = true;
+                            LblGameStatus.Text = "You Win!";
                             GameStatus.BackColor = Color.Green;
                             gameOver = true;
                         }
@@ -255,8 +255,8 @@ namespace MineSweeper
                                 }
                             }
                         }
-                        label2.Visible = true;
-                        label2.Text = "Game Over";
+                        LblGameStatus.Visible = true;
+                        LblGameStatus.Text = "Game Over";
                         GameStatus.BackColor = Color.Red;
                     }
 
@@ -280,12 +280,12 @@ namespace MineSweeper
                                         box[x, y].ForeColor = Color.Red;
                                         flags++;
                                         box[x, y].Text = "F";
-                                        label1.Text = $"mines flagged:\n{flags} / {mines}";
+                                        LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
                                     }
                                 }
                             }
-                            label2.Visible = true;
-                            label2.Text = "You Win!";
+                            LblGameStatus.Visible = true;
+                            LblGameStatus.Text = "You Win!";
                             GameStatus.BackColor = Color.Green;
                             gameOver = true;
                         }
