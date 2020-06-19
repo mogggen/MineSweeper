@@ -26,7 +26,7 @@ namespace MineSweeper
             first = true;
             flags = 0;
             revealed = 0;
-            mines = (int)numericUpDown1.Value;
+            mines = (int)NudBombCounter.Value;
             GameStatus.BackColor = Color.LightGray;
             label1.Text = $"mines flagged:\n{flags} / {mines}";
             label2.Visible = false;
@@ -55,11 +55,11 @@ namespace MineSweeper
         public Game()
         {
             InitializeComponent();
-            mines = (int)numericUpDown1.Value;
+            mines = (int)NudBombCounter.Value;
             box = new Button[w, h];
             count = new int[w, h];
             isMine = new bool[w, h];
-            numericUpDown1.Value = mines;
+            NudBombCounter.Value = mines;
             label1.Text = $"mines flagged:\n{flags} / {mines}";
             label2.Visible = false;
 

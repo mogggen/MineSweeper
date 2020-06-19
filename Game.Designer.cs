@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.GameStatus = new System.Windows.Forms.PictureBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.NudBombCounter = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Help = new System.Windows.Forms.Button();
             this.btnReplay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).BeginInit();
             this.SuspendLayout();
             // 
             // GameStatus
@@ -51,16 +51,16 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(170, 87);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.NudBombCounter.Location = new System.Drawing.Point(170, 87);
+            this.NudBombCounter.Maximum = new decimal(new int[] {
             99,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(38, 20);
-            this.numericUpDown1.TabIndex = 1;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.NudBombCounter.Name = "numericUpDown1";
+            this.NudBombCounter.Size = new System.Drawing.Size(38, 20);
+            this.NudBombCounter.TabIndex = 1;
+            this.NudBombCounter.Value = new decimal(new int[] {
             16,
             0,
             0,
@@ -119,13 +119,13 @@
             this.Controls.Add(this.Help);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.NudBombCounter);
             this.Controls.Add(this.GameStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game";
             this.Text = "MineSweeper";
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -134,7 +134,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox GameStatus;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown NudBombCounter;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Help;
