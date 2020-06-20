@@ -35,7 +35,7 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    box[x, y].BackColor = Color.White;
+                    box[x, y].BackColor =
                     box[x, y].ForeColor = Color.White;
                     //replay puzzle
                     if (!replay)
@@ -113,163 +113,133 @@ namespace MineSweeper
 
         private void Game_MouseDown(object sender, MouseEventArgs e)
         {
-            b = (Button)sender;
-            p = (Point)b.Tag;
-            int ned = 0;
-            int sid = 0;
-            int i = 0;
-
-            if (MouseButtons == MouseButtons.Right && !gameOver)
+            if (!gameOver)
             {
-                if (b.Text != "F" && b.BackColor != BackColor)
-                {
-                    b.ForeColor = Color.Red;
-                    flags++;
-                    b.Text = "F";
-                }
+                b = (Button)sender;
+                p = (Point)b.Tag;
+                int ned = 0;
+                int sid = 0;
+                int i = 0;
 
-                else if (b.BackColor != BackColor)
+                if (MouseButtons == MouseButtons.Right)
                 {
-                    b.ForeColor = b.BackColor;
-                    flags--;
-                    b.Text = "" + count[p.X, p.Y];
-                }
-                LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-            }
-
-            if (MouseButtons == MouseButtons.Left && b.Text != "F" && !gameOver)
-            {
-                if (first)
-                {
-                    if (replay) i = mines;
-
-                    while (i < mines)
+                    if (b.Text != "F" && b.BackColor != BackColor)
                     {
-                        ned = rand.Next(h);
-                        sid = rand.Next(w);
-                        if (!isMine[sid, ned] && (p.Y != ned || p.X != sid))
-                        {
-                            isMine[sid, ned] = true;
-                            box[sid, ned].Text = "X";
-                            i++;
-                        }
+                        b.ForeColor = Color.Red;
+                        flags++;
+                        b.Text = "F";
                     }
 
-                    if (b.BackColor != BackColor)
+                    else if (b.BackColor != BackColor)
                     {
-                        b.BackColor = BackColor;
+                        b.ForeColor = b.BackColor;
+                        flags--;
+                        b.Text = "" + count[p.X, p.Y];
+                    }
+                    LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                }
 
-                        for (int y = 0; y < h; y++)
+                if (MouseButtons == MouseButtons.Left && b.Text != "F")
+                {
+                    if (first)
+                    {
+                        if (replay) i = mines;
+
+                        while (i < mines)
                         {
-                            for (int x = 0; x < w; x++)
+                            ned = rand.Next(h);
+                            sid = rand.Next(w);
+                            if (!isMine[sid, ned] && (p.Y != ned || p.X != sid))
                             {
-                                count[x, y] = 0;
-
-                                for (int xx = -1; xx < 2; xx++)
-                                {
-                                    for (int yy = -1; yy < 2; yy++)
-                                    {
-                                        try
-                                        {
-                                            if (isMine[x + xx, y + yy] && (xx != 0 || yy != 0)) count[x, y]++;
-                                        }
-                                        catch { }
-                                    }
-                                }
-
-                                first = false;
-                                box[x, y].ForeColor = box[x, y].BackColor;
-                                if (count[p.X, p.Y] == 0)
-                                {
-                                    box[p.X, p.Y].ForeColor = BackColor;
-
-                                }
-                                else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
-                                else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
-                                else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
-                                else if (count[p.X, p.Y] > 3) box[p.X, p.Y].ForeColor = Color.Purple;
-                                box[x, y].Text = count[x, y].ToString();
+                                isMine[sid, ned] = true;
+                                box[sid, ned].Text = "X";
+                                i++;
                             }
                         }
 
-                        Sweep(p.X, p.Y);
-
-                        revealed = 0;
-                        for (int y = 0; y < h; y++)
-                            for (int x = 0; x < w; x++)
-                                if (box[x, y].BackColor == BackColor)
-                                    revealed++;
-
-                        if (revealed == w * h - mines)
+                        if (b.BackColor != BackColor)
                         {
+                            b.BackColor = BackColor;
+
                             for (int y = 0; y < h; y++)
                             {
                                 for (int x = 0; x < w; x++)
                                 {
-                                    if (isMine[x, y] && box[x, y].Text != "F")
+                                    count[x, y] = 0;
+
+                                    for (int xx = -1; xx < 2; xx++)
                                     {
-                                        box[x, y].ForeColor = Color.Red;
-                                        flags++;
-                                        box[x, y].Text = "F";
+                                        for (int yy = -1; yy < 2; yy++)
+                                        {
+                                            try
+                                            {
+                                                if (isMine[x + xx, y + yy] && (xx != 0 || yy != 0)) count[x, y]++;
+                                            }
+                                            catch { }
+                                        }
+                                    }
+
+                                    first = false; //VERY werid line
+                                    box[x, y].ForeColor = box[x, y].BackColor;
+                                    if (count[p.X, p.Y] == 0)
+                                    {
+                                        box[p.X, p.Y].ForeColor = BackColor;
 
                                     }
+                                    else if (count[p.X, p.Y] == 1) box[p.X, p.Y].ForeColor = Color.LightBlue;
+                                    else if (count[p.X, p.Y] == 2) box[p.X, p.Y].ForeColor = Color.Green;
+                                    else if (count[p.X, p.Y] == 3) box[p.X, p.Y].ForeColor = Color.Red;
+                                    else if (count[p.X, p.Y] > 3) box[p.X, p.Y].ForeColor = Color.Purple;
+                                    box[x, y].Text = count[x, y].ToString();
                                 }
                             }
-                            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-                            LblGameStatus.Visible = true;
-                            LblGameStatus.Text = "You Win!";
-                            GameStatus.BackColor = Color.Green;
-                            gameOver = true;
+
+                            Sweep(p.X, p.Y);
+
+                            revealed = 0;
+                            for (int y = 0; y < h; y++)
+                                for (int x = 0; x < w; x++)
+                                    if (box[x, y].BackColor == BackColor)
+                                        revealed++;
+
+                            if (revealed == w * h - mines)
+                            {
+                                for (int y = 0; y < h; y++)
+                                {
+                                    for (int x = 0; x < w; x++)
+                                    {
+                                        if (isMine[x, y] && box[x, y].Text != "F")
+                                        {
+                                            box[x, y].ForeColor = Color.Red;
+                                            flags++;
+                                            box[x, y].Text = "F";
+
+                                        }
+                                    }
+                                }
+                                LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                                LblGameStatus.Visible = true;
+                                LblGameStatus.Text = "You Win!";
+                                GameStatus.BackColor = Color.Green;
+                                gameOver = true;
+                            }
                         }
-                    }
-                }
-
-                else
-                {
-                    if (isMine[p.X, p.Y])
-                    {
-                        b.BackColor = Color.Red;
-                        gameOver = true;
-                    }
-
-                    if (!gameOver)
-                    {
-                        Sweep(p.X, p.Y);
                     }
 
                     else
                     {
-                        for (int y = 0; y < h; y++)
+                        if (isMine[p.X, p.Y])
                         {
-                            for (int x = 0; x < w; x++)
-                            {
-                                if (isMine[x, y] && box[x, y].Text != "F")
-                                {
-                                    box[x, y].ForeColor = Color.Black;
-                                    box[x, y].Text = "X";
-                                }
-                                else if (!isMine[x, y] && box[x, y].Text == "F")
-                                {
-                                    box[x, y].ForeColor = Color.Blue;
-                                    box[x, y].Text = ">";
-                                }
-                            }
+                            b.BackColor = Color.Red;
+                            gameOver = true;
                         }
-                        LblGameStatus.Visible = true;
-                        LblGameStatus.Text = "Game Over";
-                        GameStatus.BackColor = Color.Red;
-                    }
 
-                    //check for win
-                    if (!first)
-                    {
-                        int revealed = 0;
-                        for (int y = 0; y < h; y++)
-                            for (int x = 0; x < w; x++)
-                                if (box[x, y].BackColor == BackColor)
-                                    revealed++;
+                        if (!gameOver)
+                        {
+                            Sweep(p.X, p.Y);
+                        }
 
-                        if (revealed == w * h - mines && !isMine[p.X, p.Y])
+                        else
                         {
                             for (int y = 0; y < h; y++)
                             {
@@ -277,17 +247,50 @@ namespace MineSweeper
                                 {
                                     if (isMine[x, y] && box[x, y].Text != "F")
                                     {
-                                        box[x, y].ForeColor = Color.Red;
-                                        flags++;
-                                        box[x, y].Text = "F";
-                                        LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                                        box[x, y].ForeColor = Color.Black;
+                                        box[x, y].Text = "X";
+                                    }
+                                    else if (!isMine[x, y] && box[x, y].Text == "F")
+                                    {
+                                        box[x, y].ForeColor = Color.Blue;
+                                        box[x, y].Text = ">";
                                     }
                                 }
                             }
                             LblGameStatus.Visible = true;
-                            LblGameStatus.Text = "You Win!";
-                            GameStatus.BackColor = Color.Green;
-                            gameOver = true;
+                            LblGameStatus.Text = "Game Over";
+                            GameStatus.BackColor = Color.Red;
+                        }
+
+                        //check for win
+                        if (!first)
+                        {
+                            int revealed = 0;
+                            for (int y = 0; y < h; y++)
+                                for (int x = 0; x < w; x++)
+                                    if (box[x, y].BackColor == BackColor)
+                                        revealed++;
+
+                            if (revealed == w * h - mines && !isMine[p.X, p.Y])
+                            {
+                                for (int y = 0; y < h; y++)
+                                {
+                                    for (int x = 0; x < w; x++)
+                                    {
+                                        if (isMine[x, y] && box[x, y].Text != "F")
+                                        {
+                                            box[x, y].ForeColor = Color.Red;
+                                            flags++;
+                                            box[x, y].Text = "F";
+                                            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                                        }
+                                    }
+                                }
+                                LblGameStatus.Visible = true;
+                                LblGameStatus.Text = "You Win!";
+                                GameStatus.BackColor = Color.Green;
+                                gameOver = true;
+                            }
                         }
                     }
                 }
