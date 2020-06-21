@@ -150,19 +150,15 @@ namespace MineSweeper
                                 count[x, y] = 0;
                                 if (!(x == p.X && y == p.Y))
                                 {
-
-
-                                    for (int xx = -1; xx < 2; xx++)
+                                    for (int i = 0; i < 9; i++)
                                     {
-                                        for (int yy = -1; yy < 2; yy++)
+                                        try
                                         {
-                                            try
-                                            {
-                                                if (isMine[x + xx, y + yy] && (xx != 0 || yy != 0)) count[x, y]++;
-                                            }
-                                            catch { }
+                                            if (isMine[x + i % 3 - 1, y + i / 3 - 1] && i != 4) count[x, y]++;
                                         }
+                                        catch (IndexOutOfRangeException) { }
                                     }
+
                                     box[x, y].ForeColor = box[x, y].BackColor;
                                     box[x, y].Text = count[x, y].ToString();
                                 }
@@ -173,8 +169,6 @@ namespace MineSweeper
                                 }
                             }
                         }
-
-                        
                         first = false;
                     }
 
