@@ -148,23 +148,24 @@ namespace MineSweeper
                             for (int x = 0; x < w; x++)
                             {
                                 count[x, y] = 0;
+
+                                for (int i = 0; i < 9; i++)
+                                {
+                                    try
+                                    {
+                                        if (isMine[x + i % 3 - 1, y + i / 3 - 1] && i != 4) count[x, y]++;
+                                    }
+                                    catch (IndexOutOfRangeException) { }
+                                }
                                 if (!(x == p.X && y == p.Y))
                                 {
-                                    for (int i = 0; i < 9; i++)
-                                    {
-                                        try
-                                        {
-                                            if (isMine[x + i % 3 - 1, y + i / 3 - 1] && i != 4) count[x, y]++;
-                                        }
-                                        catch (IndexOutOfRangeException) { }
-                                    }
-
-                                    box[x, y].ForeColor = box[x, y].BackColor;
                                     box[x, y].Text = count[x, y].ToString();
+                                    box[x, y].ForeColor = Color.White;
                                 }
                                 else
                                 {
                                     b.BackColor = BackColor;
+                                    box[x, y].Text = count[x, y].ToString();
                                     b.ForeColor = Revealed(count[p.X, p.Y]);
                                 }
                             }
