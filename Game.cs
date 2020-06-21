@@ -40,7 +40,6 @@ namespace MineSweeper
                     //replay puzzle
                     if (!replay)
                         isMine[x, y] = false;
-                    
                 }
             }
             gameOver = false;
@@ -157,17 +156,9 @@ namespace MineSweeper
                                     }
                                     catch (IndexOutOfRangeException) { }
                                 }
-                                if (!(x == p.X && y == p.Y))
-                                {
-                                    box[x, y].Text = count[x, y].ToString();
-                                    box[x, y].ForeColor = Color.White;
-                                }
-                                else
-                                {
-                                    b.BackColor = BackColor;
-                                    box[x, y].Text = count[x, y].ToString();
-                                    b.ForeColor = Revealed(count[p.X, p.Y]);
-                                }
+                                box[x, y].Text = count[x, y].ToString();
+                                if (x != p.X || y != p.Y) box[x, y].ForeColor = Color.White;
+                                else b.ForeColor = Revealed(count[p.X, p.Y]);
                             }
                         }
                         first = false;
