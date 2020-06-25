@@ -7,7 +7,7 @@ namespace MineSweeper
     public partial class Game : Form
     {
         Random rand = new Random(); // used to distribute mines.
-        int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
+        int w = 20, h = 20, s = 25, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
         Button[,] box; // The boxes
@@ -19,6 +19,37 @@ namespace MineSweeper
         bool first = true, replay = false; // 
         int flags = 0; // Amount of flags.
         int[,] count; // The Number of adjacent mines for each box.
+
+        public Game()
+        {
+            InitializeComponent();
+            mines = (int)NudBombCounter.Value;
+            box = new Button[w, h];
+            count = new int[w, h];
+            isMine = new bool[w, h];
+            NudBombCounter.Value = mines;
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblGameStatus.Visible = false;
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    box[x, y] = new Button()
+                    {
+                        Anchor = AnchorStyles.Top | AnchorStyles.Left,
+                        Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
+                        BackColor = Color.White,
+                        Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
+                        Size = new Size(s, s),
+                        Tag = new Point(x, y),
+                    };
+
+                    Controls.Add(box[x, y]);
+                    box[x, y].MouseDown += Game_MouseDown;
+                }
+            }
+        }
 
         private void GameStatus_Click(object sender, EventArgs e)
         {
@@ -49,37 +80,6 @@ namespace MineSweeper
         {
             Help help = new Help();
             help.Show();
-        }
-
-        public Game()
-        {
-            InitializeComponent();
-            mines = (int)NudBombCounter.Value;
-            box = new Button[w, h];
-            count = new int[w, h];
-            isMine = new bool[w, h];
-            NudBombCounter.Value = mines;
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-            LblGameStatus.Visible = false;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    box[x, y] = new Button()
-                    {
-                        Anchor = AnchorStyles.Top | AnchorStyles.Left,
-                        Font = new Font("Microsoft sans serif", 16, FontStyle.Regular),
-                        BackColor = Color.White,
-                        Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
-                        Size = new Size(s, s),
-                        Tag = new Point(x, y),
-                    };
-
-                    Controls.Add(box[x, y]);
-                    box[x, y].MouseDown += Game_MouseDown;
-                }
-            }
         }
 
         private void BtnReplay_Click(object sender, EventArgs e)
@@ -226,6 +226,17 @@ namespace MineSweeper
                         GameStatus.BackColor = Color.Green;
                         gameOver = true;
                     }
+                }
+            }
+        }
+
+        private void Game_SizeChanged(object sender, EventArgs e)
+        {
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    box[x, y].Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m));
                 }
             }
         }
