@@ -7,7 +7,7 @@ namespace MineSweeper
     public partial class Game : Form
     {
         Random rand = new Random(); // used to distribute mines.
-        int w = 20, h = 20, s = 25, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
+        int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
         Button[,] box; // The boxes
