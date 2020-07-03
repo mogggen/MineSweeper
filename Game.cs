@@ -14,7 +14,6 @@ namespace MineSweeper
 
         bool[,] isMine;
         bool gameOver = false;
-        int revealed = 0;
         int mines = 16; // Number of mines to flag.
         bool first = true, replay = false; // 
         int flags = 0; // Amount of flags.
@@ -56,7 +55,6 @@ namespace MineSweeper
             replay = false;
             first = true;
             flags = 0;
-            revealed = 0;
             mines = (int)NudBombCounter.Value;
             GameStatus.BackColor = Color.LightGray;
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
@@ -88,8 +86,8 @@ namespace MineSweeper
             replay = true;
             first = true;
             flags = 0;
-            revealed = 0;
             GameStatus.BackColor = Color.LightGray;
+            GameStatus.Image = Properties.Resources.playing;
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
 
@@ -201,7 +199,7 @@ namespace MineSweeper
                     }
 
                     //check for win
-                    revealed = 0;
+                    int revealed = 0;
                     for (int y = 0; y < h; y++)
                         for (int x = 0; x < w; x++)
                             if (box[x, y].BackColor == BackColor)
@@ -285,7 +283,7 @@ namespace MineSweeper
                             {
                                 Sweep(x + i % 3 - 1, y + i / 3 - 1);
                             }
-                            catch { }
+                            catch (IndexOutOfRangeException) { }
             }
             return;
         }

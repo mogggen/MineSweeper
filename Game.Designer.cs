@@ -94,6 +94,7 @@
             this.LblGameStatus.Size = new System.Drawing.Size(117, 29);
             this.LblGameStatus.TabIndex = 3;
             this.LblGameStatus.Text = "You Win!";
+            this.LblGameStatus.Visible = false;
             // 
             // Help
             // 
