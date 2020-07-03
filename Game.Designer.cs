@@ -42,6 +42,7 @@
             // 
             this.GameStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.GameStatus.BackColor = System.Drawing.Color.LightGray;
+            this.GameStatus.Image = global::MineSweeper.Properties.Resources.playing;
             this.GameStatus.Location = new System.Drawing.Point(214, 23);
             this.GameStatus.Name = "GameStatus";
             this.GameStatus.Size = new System.Drawing.Size(100, 84);

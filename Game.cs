@@ -61,6 +61,7 @@ namespace MineSweeper
             GameStatus.BackColor = Color.LightGray;
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
+            GameStatus.Image = Properties.Resources.playing;
 
             for (int y = 0; y < h; y++)
             {
@@ -196,6 +197,7 @@ namespace MineSweeper
                         LblGameStatus.Visible = true;
                         LblGameStatus.Text = "Game Over";
                         GameStatus.BackColor = Color.Red;
+                        GameStatus.Image = Properties.Resources.lost;
                     }
 
                     //check for win
@@ -224,6 +226,7 @@ namespace MineSweeper
                         LblGameStatus.Visible = true;
                         LblGameStatus.Text = "You Win!";
                         GameStatus.BackColor = Color.Green;
+                        GameStatus.Image = Properties.Resources.win;
                         gameOver = true;
                     }
                 }
