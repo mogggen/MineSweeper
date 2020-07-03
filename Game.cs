@@ -97,12 +97,7 @@ namespace MineSweeper
                 {
                     box[x, y].BackColor = Color.White;
                     box[x, y].ForeColor = Color.White;
-                    if (box[x, y].Text == "X")
-                    {
-                        box[x, y].Text = "";
-                    }
-                    else
-                        box[x, y].Text = "" + count[x, y];
+                    box[x, y].Text = count[x, y].ToString();
                     gameOver = false;
                 }
             }
