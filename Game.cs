@@ -6,34 +6,35 @@ namespace MineSweeper
 {
     public partial class Game : Form
     {
-        Random rand = new Random(); // used to distribute mines.
+        Random rand = new Random(); // module is used to distribute mines.
         int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
 
         Land[,] land;
 
-        bool gameOver = false;
-        int mines = 16; // Number of mines to flag.
-        bool first = true, replay = false; // gives the player the oppertunity to replay.
-        int flags = 0; // Amount of flags.
-        
+        bool gameOver, first, replay;
+        int flags, mines;
 
         public Game()
         {
             InitializeComponent();
-            mines = (int)NudBombCounter.Value;
-            land = new Land[w, h];
-            NudBombCounter.Value = mines;
+
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
+            mines = (int)NudBombCounter.Value; // Number of mines on the board.
+            flags = 0; // Number of flags used.
+            first = true; // Boolean to let the mines be placed once, and asuring that you won't sweep a mine on first sweep.
+            replay = false; // Gives the player the oppertunity to replay.
+            gameOver = false; // Locking the game state on game over.
+            land = new Land[w, h];
 
             for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x < w; x++)
                 {
                     land[x, y] = new Land();
-                    land[x, y].Box = new Button
+                    land[x, y].Btn = new Button
                     {
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
@@ -43,8 +44,8 @@ namespace MineSweeper
                         Tag = new Point(x, y),
                     };
 
-                    Controls.Add(land[x, y].Box);
-                    land[x, y].Box.MouseDown += Game_MouseDown;
+                    Controls.Add(land[x, y].Btn);
+                    land[x, y].Btn.MouseDown += Game_MouseDown;
                 }
             }
         }
@@ -64,8 +65,8 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Box.BackColor =
-                    land[x, y].Box.ForeColor = Color.White;
+                    land[x, y].Btn.BackColor =
+                    land[x, y].Btn.ForeColor = Color.White;
                     //replay puzzle
                     if (!replay)
                         land[x, y].IsMine = false;
@@ -94,9 +95,9 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Box.BackColor = 
-                    land[x, y].Box.ForeColor = Color.White;
-                    land[x, y].Box.Text = land[x, y].Count.ToString();
+                    land[x, y].Btn.BackColor = 
+                    land[x, y].Btn.ForeColor = Color.White;
+                    land[x, y].Btn.Text = land[x, y].Count.ToString();
                     gameOver = false;
                 }
             }
@@ -107,7 +108,11 @@ namespace MineSweeper
             if (!gameOver)
             {
                 b = (Button)sender;
-                p = (Point)b.Tag;
+
+                if (MouseButtons == MouseButtons.Left && b.Text != "F")
+                {
+                    LeftClick(b);
+                }
 
                 if (MouseButtons == MouseButtons.Right)
                 {
@@ -126,103 +131,6 @@ namespace MineSweeper
                     }
                     LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
                 }
-
-                if (MouseButtons == MouseButtons.Left && b.Text != "F")
-                {
-                    if (first)
-                    {
-                        int placed = 0;
-                        if (replay) placed = mines;
-                        First(p.X, p.Y, placed);
-
-                        for (int y = 0; y < h; y++)
-                        {
-                            for (int x = 0; x < w; x++)
-                            {
-                                land[x, y].Count = 0;
-
-                                for (int i = 0; i < 9; i++)
-                                {
-                                    if (land[x, y].IsMine) break;
-                                    try
-                                    {
-                                        if (land[x + i % 3 - 1, y + i / 3 - 1].IsMine && i != 4) land[x, y].Count++;
-                                    }
-                                    catch (IndexOutOfRangeException) { }
-                                }
-                                land[x, y].Box.Text = land[x, y].Count.ToString();
-                                if (x != p.X || y != p.Y) land[x, y].Box.ForeColor = Color.White;
-                                else b.ForeColor = Revealed(land[p.X, p.Y].Count);
-                            }
-                        }
-                        first = false;
-                    }
-
-                    if (land[p.X, p.Y].IsMine)
-                    {
-                        b.BackColor = Color.Red;
-                        gameOver = true;
-                    }
-
-                    if (!gameOver)
-                    {
-                        Sweep(p.X, p.Y);
-                    }
-
-                    else
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            for (int x = 0; x < w; x++)
-                            {
-                                if (land[x, y].IsMine && land[x, y].Box.Text != "F")
-                                {
-                                    land[x, y].Box.ForeColor = Color.Black;
-                                    land[x, y].Box.Text = "X";
-                                }
-                                else if (!land[x, y].IsMine && land[x, y].Box.Text == "F")
-                                {
-                                    land[x, y].Box.ForeColor = Color.Blue;
-                                    land[x, y].Box.Text = ">";
-                                }
-                            }
-                        }
-                        LblGameStatus.Visible = true;
-                        LblGameStatus.Text = "Game Over";
-                        GameStatus.BackColor = Color.Red;
-                        GameStatus.Image = Properties.Resources.lost;
-                    }
-
-                    //check for win
-                    int revealed = 0;
-                    for (int y = 0; y < h; y++)
-                        for (int x = 0; x < w; x++)
-                            if (land[x, y].Box.BackColor == BackColor)
-                                revealed++;
-
-                    if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            for (int x = 0; x < w; x++)
-                            {
-                                if (land[x, y].IsMine && land[x, y].Box.Text != "F")
-                                {
-                                    land[x, y].Box.ForeColor = Color.Red;
-                                    flags++;
-                                    land[x, y].Box.Text = "F";
-
-                                }
-                            }
-                        }
-                        LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-                        LblGameStatus.Visible = true;
-                        LblGameStatus.Text = "You Win!";
-                        GameStatus.BackColor = Color.Green;
-                        GameStatus.Image = Properties.Resources.win;
-                        gameOver = true;
-                    }
-                }
             }
         }
 
@@ -232,47 +140,149 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Box.Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m));
+                    land[x, y].Btn.Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m));
                 }
             }
         }
 
-        void First(int pX, int pY, int i)
+        void First(Button b)
         {
-            int ned, sid;
+            Point p = (Point)b.Tag;
+            int ned, sid, placed = 0;
             
-            while (i < mines)
+            while (placed < mines)
             {
                 ned = rand.Next(h);
                 sid = rand.Next(w);
                 if (!land[sid, ned].IsMine && (p.Y != ned || p.X != sid))
                 {
                     land[sid, ned].IsMine = true;
-                    land[sid, ned].Box.Text = "X";
-                    i++;
+                    land[sid, ned].Btn.Text = "X";
+                    placed++;
                 }
             }
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    land[x, y].Count = 0;
+
+                    for (int i = 0; i < 9; i++)
+                    {
+                        if (land[x, y].IsMine) break;
+                        try
+                        {
+                            if (land[x + i % 3 - 1, y + i / 3 - 1].IsMine && i != 4) land[x, y].Count++;
+                        }
+                        catch (IndexOutOfRangeException) { }
+                    }
+                    land[x, y].Btn.Text = land[x, y].Count.ToString();
+                    if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = Color.White;
+                    else b.ForeColor = Revealed(land[p.X, p.Y].Count);
+                }
+            }
+            first = false;
         }
 
         class Land
         {
-            public Button Box { get; set; }
+            public Button Btn { get; set; }
             public int Count { get; set; }
             public bool IsFlagged { get; set; }
             public bool IsMine { get; set; }
         }
 
+        void SmartClick(int x, int y, int flagged, int unsweeped)
+        {
+
+        }
+
+        void LeftClick( Button b)
+        {
+            Point p = (Point)b.Tag;
+
+            if (first && !replay)
+                First(b);
+
+            if (land[p.X, p.Y].IsMine)
+            {
+                b.BackColor = Color.Red;
+                gameOver = true;
+            }
+
+            if (!gameOver)
+            {
+                Sweep(p.X, p.Y);
+            }
+
+            else
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                        {
+                            land[x, y].Btn.ForeColor = Color.Black;
+                            land[x, y].Btn.Text = "X";
+                        }
+                        else if (!land[x, y].IsMine && land[x, y].Btn.Text == "F")
+                        {
+                            land[x, y].Btn.ForeColor = Color.Blue;
+                            land[x, y].Btn.Text = ">";
+                        }
+                    }
+                }
+                LblGameStatus.Visible = true;
+                LblGameStatus.Text = "Game Over";
+                GameStatus.BackColor = Color.Red;
+                GameStatus.Image = Properties.Resources.lost;
+            }
+
+            //check for win
+            int revealed = 0;
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                    if (land[x, y].Btn.BackColor == BackColor)
+                        revealed++;
+
+            if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                        {
+                            land[x, y].Btn.ForeColor = Color.Red;
+                            flags++;
+                            land[x, y].Btn.Text = "F";
+
+                        }
+                    }
+                }
+                LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                LblGameStatus.Visible = true;
+                LblGameStatus.Text = "You Win!";
+                GameStatus.BackColor = Color.Green;
+                GameStatus.Image = Properties.Resources.win;
+                gameOver = true;
+            }
+        }
+
+        //Recursivly sweeps all adjacent land.
         void Sweep(int x, int y)
         {
-            if (land[x, y].Box.Text == "F" ||
-                land[x, y].Box.BackColor == BackColor) { return; }
+            if (land[x, y].Btn.Text == "F" ||
+                land[x, y].Btn.BackColor == BackColor) { return; }
 
-            if (land[x, y].Box.BackColor == Color.White)
+            if (land[x, y].Btn.BackColor == Color.White)
             {
-                land[x, y].Box.BackColor = BackColor;
-                land[x, y].Box.ForeColor = Revealed(int.Parse(land[x, y].Box.Text));
+                land[x, y].Btn.BackColor = BackColor;
+                land[x, y].Btn.ForeColor = Revealed(int.Parse(land[x, y].Btn.Text));
 
-                if (land[x, y].Box.Text == "0")
+                if (land[x, y].Btn.Text == "0")
                     for (int i = 0; i < 9; i++)
                         if (i != 4)
                             try
