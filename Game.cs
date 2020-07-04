@@ -15,7 +15,7 @@ namespace MineSweeper
 
         bool gameOver = false;
         int mines = 16; // Number of mines to flag.
-        bool first = true, replay = false; // 
+        bool first = true, replay = false; // gives the player the oppertunity to replay.
         int flags = 0; // Amount of flags.
         
 
