@@ -86,23 +86,8 @@ namespace MineSweeper
 
         private void BtnReplay_Click(object sender, EventArgs e)
         {
+            GameStatus_Click(new object(), new EventArgs());
             replay = true;
-            first = true;
-            flags = 0;
-            GameStatus.Image = Properties.Resources.playing;
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-            LblGameStatus.Visible = false;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    land[x, y].Btn.BackColor =
-                    land[x, y].Btn.ForeColor = Color.White;
-                    land[x, y].Btn.Text = land[x, y].Count.ToString();
-                    gameOver = false;
-                }
-            }
         }
 
         private void Game_MouseDown(object sender, MouseEventArgs e)
@@ -297,7 +282,7 @@ namespace MineSweeper
             int c = Component;
             Color[] palette =
             {
-                Color.Gray,
+                Color.DarkGray,
                 Color.Blue,
                 Color.Green,
                 Color.Red,
@@ -305,7 +290,7 @@ namespace MineSweeper
                 Color.Maroon,
                 Color.Turquoise,
                 Color.Black,
-                Color.DarkGray,
+                Color.DimGray,
             };
             for (int g = 0; g < palette.Length; g++)
                 if (c == g) return palette[g];
