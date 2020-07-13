@@ -97,7 +97,7 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Btn.BackColor = 
+                    land[x, y].Btn.BackColor =
                     land[x, y].Btn.ForeColor = Color.White;
                     land[x, y].Btn.Text = land[x, y].Count.ToString();
                     gameOver = false;
@@ -151,7 +151,7 @@ namespace MineSweeper
         {
             Point p = (Point)b.Tag;
             int ned, sid, placed = 0;
-            
+
             while (placed < mines)
             {
                 ned = rand.Next(h);
@@ -200,7 +200,7 @@ namespace MineSweeper
 
         }
 
-        void LeftClick( Button b)
+        void LeftClick(Button b)
         {
             Point p = (Point)b.Tag;
 
@@ -210,15 +210,6 @@ namespace MineSweeper
             if (land[p.X, p.Y].IsMine)
             {
                 gameOver = true;
-            }
-
-            if (!gameOver)
-            {
-                Sweep(p.X, p.Y);
-            }
-
-            else
-            {
                 b.BackColor = Color.Red;
 
                 for (int y = 0; y < h; y++)
@@ -242,12 +233,16 @@ namespace MineSweeper
                 LblGameStatus.Text = "Game Over";
                 GameStatus.Image = Properties.Resources.lost;
             }
+            else
+            {
+                Sweep(p.X, p.Y);
+            }
 
             //check for win
             int revealed = 0;
             for (int y = 0; y < h; y++)
                 for (int x = 0; x < w; x++)
-                    if (land[x, y].Btn.BackColor == BackColor)
+                    if (land[x, y].Btn.BackColor == Revealed(0))
                         revealed++;
 
             if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
