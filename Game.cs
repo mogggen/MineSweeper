@@ -38,7 +38,8 @@ namespace MineSweeper
                     {
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
-                        BackColor = Color.White,
+                        ForeColor = Color.LightGray,
+                        BackColor = Color.LightGray,
                         Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
                         Size = new Size(s, s),
                         Tag = new Point(x, y),
@@ -65,14 +66,16 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Btn.BackColor =
-                    land[x, y].Btn.ForeColor = Color.White;
+                    if (land[x, y].Btn.ForeColor != Color.White)
+                        land[x, y].Btn.BackColor =
+                        land[x, y].Btn.ForeColor = Revealed(0);
                     //replay puzzle
                     if (!replay)
                         land[x, y].IsMine = false;
                 }
             }
             gameOver = false;
+            first = true;
         }
 
         private void Help_Click(object sender, EventArgs e)
@@ -86,7 +89,6 @@ namespace MineSweeper
             replay = true;
             first = true;
             flags = 0;
-            GameStatus.BackColor = Color.LightGray;
             GameStatus.Image = Properties.Resources.playing;
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
@@ -116,14 +118,14 @@ namespace MineSweeper
 
                 if (MouseButtons == MouseButtons.Right)
                 {
-                    if (b.Text != "F" && b.BackColor != BackColor)
+                    if (b.Text != "F" && b.BackColor != Revealed(0))
                     {
                         b.ForeColor = Color.Red;
                         flags++;
                         b.Text = "F";
                     }
 
-                    else if (b.BackColor != BackColor)
+                    else if (b.BackColor != Revealed(0))
                     {
                         b.ForeColor = b.BackColor;
                         flags--;
@@ -178,7 +180,7 @@ namespace MineSweeper
                         catch (IndexOutOfRangeException) { }
                     }
                     land[x, y].Btn.Text = land[x, y].Count.ToString();
-                    if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = Color.White;
+                    if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = Revealed(0);
                     else b.ForeColor = Revealed(land[p.X, p.Y].Count);
                 }
             }
@@ -235,8 +237,8 @@ namespace MineSweeper
                     }
                 }
                 LblGameStatus.Visible = true;
+                LblGameStatus.ForeColor = Color.Red;
                 LblGameStatus.Text = "Game Over";
-                GameStatus.BackColor = Color.Red;
                 GameStatus.Image = Properties.Resources.lost;
             }
 
@@ -264,8 +266,8 @@ namespace MineSweeper
                 }
                 LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
                 LblGameStatus.Visible = true;
+                LblGameStatus.ForeColor = Color.ForestGreen;
                 LblGameStatus.Text = "You Win!";
-                GameStatus.BackColor = Color.Green;
                 GameStatus.Image = Properties.Resources.win;
                 gameOver = true;
             }
@@ -275,11 +277,11 @@ namespace MineSweeper
         void Sweep(int x, int y)
         {
             if (land[x, y].Btn.Text == "F" ||
-                land[x, y].Btn.BackColor == BackColor) { return; }
+                land[x, y].Btn.BackColor == Revealed(0)) { return; }
 
             if (land[x, y].Btn.BackColor == Color.White)
             {
-                land[x, y].Btn.BackColor = BackColor;
+                land[x, y].Btn.BackColor = Revealed(0);
                 land[x, y].Btn.ForeColor = Revealed(int.Parse(land[x, y].Btn.Text));
 
                 if (land[x, y].Btn.Text == "0")
@@ -299,15 +301,19 @@ namespace MineSweeper
             int c = Component;
             Color[] palette =
             {
-                BackColor,
-                Color.LightBlue,
+                Color.Gray,
+                Color.Blue,
                 Color.Green,
                 Color.Red,
                 Color.Purple,
+                Color.Maroon,
+                Color.Turquoise,
+                Color.Black,
+                Color.DarkGray,
             };
-            for (int g = 0; g < 4; g++)
+            for (int g = 0; g < palette.Length; g++)
                 if (c == g) return palette[g];
-            return Color.Purple;
+            return new Color();
         }
     }
 }

@@ -74,7 +74,7 @@
             this.LblMineCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LblMineCounter.AutoSize = true;
             this.LblMineCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblMineCounter.ForeColor = System.Drawing.Color.Red;
+            this.LblMineCounter.ForeColor = System.Drawing.Color.Black;
             this.LblMineCounter.Location = new System.Drawing.Point(330, 36);
             this.LblMineCounter.Name = "LblMineCounter";
             this.LblMineCounter.Size = new System.Drawing.Size(185, 58);
@@ -88,7 +88,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LblGameStatus.AutoSize = true;
             this.LblGameStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblGameStatus.ForeColor = System.Drawing.Color.Red;
+            this.LblGameStatus.ForeColor = System.Drawing.Color.ForestGreen;
             this.LblGameStatus.Location = new System.Drawing.Point(197, 527);
             this.LblGameStatus.Name = "LblGameStatus";
             this.LblGameStatus.Size = new System.Drawing.Size(117, 29);
@@ -121,7 +121,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.Color.DarkGray;
             this.ClientSize = new System.Drawing.Size(561, 592);
             this.Controls.Add(this.BtnReplay);
             this.Controls.Add(this.Help);
