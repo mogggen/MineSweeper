@@ -68,7 +68,7 @@ namespace MineSweeper
                 {
                     if (land[x, y].Btn.ForeColor != Color.White)
                         land[x, y].Btn.BackColor =
-                        land[x, y].Btn.ForeColor = Revealed(0);
+                        land[x, y].Btn.ForeColor = Color.LightGray;
                     //replay puzzle
                     if (!replay)
                         land[x, y].IsMine = false;
@@ -180,7 +180,7 @@ namespace MineSweeper
                         catch (IndexOutOfRangeException) { }
                     }
                     land[x, y].Btn.Text = land[x, y].Count.ToString();
-                    if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = Revealed(0);
+                    if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = b.BackColor;
                     else b.ForeColor = Revealed(land[p.X, p.Y].Count);
                 }
             }
@@ -209,7 +209,6 @@ namespace MineSweeper
 
             if (land[p.X, p.Y].IsMine)
             {
-                b.BackColor = Color.Red;
                 gameOver = true;
             }
 
@@ -220,6 +219,8 @@ namespace MineSweeper
 
             else
             {
+                b.BackColor = Color.Red;
+
                 for (int y = 0; y < h; y++)
                 {
                     for (int x = 0; x < w; x++)
@@ -279,7 +280,7 @@ namespace MineSweeper
             if (land[x, y].Btn.Text == "F" ||
                 land[x, y].Btn.BackColor == Revealed(0)) { return; }
 
-            if (land[x, y].Btn.BackColor == Color.White)
+            if (land[x, y].Btn.BackColor == Color.LightGray)
             {
                 land[x, y].Btn.BackColor = Revealed(0);
                 land[x, y].Btn.ForeColor = Revealed(int.Parse(land[x, y].Btn.Text));
