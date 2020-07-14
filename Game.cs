@@ -17,9 +17,11 @@ namespace MineSweeper
         bool gameOver, first, replay;
         int flags, mines;
 
+        //Initilize
         public Game()
         {
             InitializeComponent();
+            BackColor = Color.Gray;
 
             LblGameStatus.Visible = false;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
@@ -39,7 +41,6 @@ namespace MineSweeper
                     {
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
-                        ForeColor =
                         BackColor = hidden,
                         Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
                         Size = new Size(s, s),
@@ -52,6 +53,41 @@ namespace MineSweeper
             }
         }
 
+        private void Game_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!gameOver)
+            {
+                b = (Button)sender;
+
+                if (MouseButtons == MouseButtons.Left && b.Text != "F")
+                {
+                    if (b.BackColor == hidden)
+                        LeftClick(b);
+                    if (b.BackColor == Revealed(0))
+                        SmartClick(land[((Point)b.Tag).X, ((Point)b.Tag).Y]);
+                }
+
+                if (MouseButtons == MouseButtons.Right && !first)
+                {
+                    if (b.Text != "F" && b.BackColor != Revealed(0))
+                    {
+                        b.ForeColor = Color.Red;
+                        flags++;
+                        b.Text = "F";
+                    }
+
+                    else if (b.BackColor != Revealed(0))
+                    {
+                        b.ForeColor = b.BackColor;
+                        flags--;
+                        b.Text = land[p.X, p.Y].Count.ToString();
+                    }
+                    LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                }
+            }
+        }
+
+        //Start new puzzle
         private void GameStatus_Click(object sender, EventArgs e)
         {
             replay = false;
@@ -78,49 +114,21 @@ namespace MineSweeper
             first = true;
         }
 
-        private void Help_Click(object sender, EventArgs e)
-        {
-            Help help = new Help();
-            help.Show();
-        }
-
+        //Replay current puzzle
         private void BtnReplay_Click(object sender, EventArgs e)
         {
             GameStatus_Click(new object(), new EventArgs());
             replay = true;
         }
 
-        private void Game_MouseDown(object sender, MouseEventArgs e)
+        //Open the help form
+        private void Help_Click(object sender, EventArgs e)
         {
-            if (!gameOver)
-            {
-                b = (Button)sender;
-
-                if (MouseButtons == MouseButtons.Left && b.Text != "F")
-                {
-                    LeftClick(b);
-                }
-
-                if (MouseButtons == MouseButtons.Right)
-                {
-                    if (b.Text != "F" && b.BackColor != Revealed(0))
-                    {
-                        b.ForeColor = Color.Red;
-                        flags++;
-                        b.Text = "F";
-                    }
-
-                    else if (b.BackColor != Revealed(0))
-                    {
-                        b.ForeColor = b.BackColor;
-                        flags--;
-                        b.Text = land[p.X, p.Y].Count.ToString();
-                    }
-                    LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-                }
-            }
+            Help help = new Help();
+            help.Show();
         }
-
+        
+        //For bigger puzzles
         private void Game_SizeChanged(object sender, EventArgs e)
         {
             for (int y = 0; y < h; y++)
@@ -132,6 +140,7 @@ namespace MineSweeper
             }
         }
 
+        //places mines
         void First(Button b)
         {
             Point p = (Point)b.Tag;
@@ -151,7 +160,7 @@ namespace MineSweeper
                         try
                         {
                             if (p.X + i % 3 - 1 == sid && p.Y + i / 3 - 1 == ned
-                                //&& w * h - mines > 8
+                                && w * h - mines >= 9
                                 )
                             {
                                 avalible = false;
@@ -191,17 +200,45 @@ namespace MineSweeper
             first = false;
         }
 
-        class Land
+        //to skip a few clicks
+        void SmartClick(Land l)
         {
-            public Button Btn { get; set; }
-            public int Count { get; set; }
-            public bool IsFlagged { get; set; }
-            public bool IsMine { get; set; }
-        }
+            Point p = (Point)l.Btn.Tag;
+            int flags = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                try
+                {
+                    if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text == "F") flags++;
+                }
+                catch (IndexOutOfRangeException) { }
+            }
+            if (flags == land[p.X, p.Y].Count)
+            {
+                for (int i = 0; i < 9; i++)
+                    if (i != 4)
+                        try
+                        {
+                            if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine &&
+                                land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text != "F")
+                                Sweep(p.X + i % 3 - 1, p.Y + i / 3 - 1);
+                            else if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine)
+                                Lose();
+                        }
+                        catch (IndexOutOfRangeException) { }
+            }
 
-        void SmartClick(int x, int y, int flagged, int unsweeped)
-        {
+            //check for win
+            int revealed = 0;
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                    if (land[x, y].Btn.BackColor == Revealed(0))
+                        revealed++;
 
+            if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
+            {
+                Win();
+            }
         }
 
         void LeftClick(Button b)
@@ -213,29 +250,7 @@ namespace MineSweeper
 
             if (land[p.X, p.Y].IsMine)
             {
-                gameOver = true;
-                b.BackColor = Color.Red;
-
-                for (int y = 0; y < h; y++)
-                {
-                    for (int x = 0; x < w; x++)
-                    {
-                        if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
-                        {
-                            land[x, y].Btn.ForeColor = Color.Black;
-                            land[x, y].Btn.Text = "X";
-                        }
-                        else if (!land[x, y].IsMine && land[x, y].Btn.Text == "F")
-                        {
-                            land[x, y].Btn.ForeColor = Color.Blue;
-                            land[x, y].Btn.Text = ">";
-                        }
-                    }
-                }
-                LblGameStatus.Visible = true;
-                LblGameStatus.ForeColor = Color.Red;
-                LblGameStatus.Text = "Game Over";
-                GameStatus.Image = Properties.Resources.lost;
+                Lose();
             }
             else
             {
@@ -251,33 +266,16 @@ namespace MineSweeper
 
             if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
             {
-                for (int y = 0; y < h; y++)
-                {
-                    for (int x = 0; x < w; x++)
-                    {
-                        if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
-                        {
-                            land[x, y].Btn.ForeColor = Color.Red;
-                            flags++;
-                            land[x, y].Btn.Text = "F";
-
-                        }
-                    }
-                }
-                LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-                LblGameStatus.Visible = true;
-                LblGameStatus.ForeColor = Color.ForestGreen;
-                LblGameStatus.Text = "You Win!";
-                GameStatus.Image = Properties.Resources.win;
-                gameOver = true;
+                Win();
             }
         }
 
         //Recursivly sweeps all adjacent land.
         void Sweep(int x, int y)
         {
-            if (land[x, y].Btn.Text == "F" ||
-                land[x, y].Btn.BackColor == Revealed(0)) { return; }
+            if (land[x, y].Btn.BackColor == Revealed(0) ||
+                land[x, y].Btn.Text == "F" ||
+                gameOver) { return; }
 
             if (land[x, y].Btn.BackColor == hidden)
             {
@@ -289,11 +287,66 @@ namespace MineSweeper
                         if (i != 4)
                             try
                             {
-                                Sweep(x + i % 3 - 1, y + i / 3 - 1);
+                                if (!land[x + i % 3 - 1, y + i / 3 - 1].IsMine)
+                                    Sweep(x + i % 3 - 1, y + i / 3 - 1);
+                                else
+                                {
+                                    Lose();
+                                }
                             }
                             catch (IndexOutOfRangeException) { }
             }
             return;
+        }
+
+        void Win()
+        {
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                    {
+                        land[x, y].Btn.ForeColor = Color.Red;
+                        flags++;
+                        land[x, y].Btn.Text = "F";
+
+                    }
+                }
+            }
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblGameStatus.Visible = true;
+            LblGameStatus.ForeColor = Color.ForestGreen;
+            LblGameStatus.Text = "You Win!";
+            GameStatus.Image = Properties.Resources.win;
+            gameOver = true;
+        }
+
+        void Lose()
+        {
+            b.BackColor = Color.Red;
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                    {
+                        land[x, y].Btn.ForeColor = Color.Black;
+                        land[x, y].Btn.Text = "X";
+                    }
+                    else if (!land[x, y].IsMine && land[x, y].Btn.Text == "F")
+                    {
+                        land[x, y].Btn.ForeColor = Color.Blue;
+                        land[x, y].Btn.Text = ">";
+                    }
+                }
+            }
+            LblGameStatus.Visible = true;
+            LblGameStatus.ForeColor = Color.DarkRed;
+            LblGameStatus.Text = "Game Over";
+            GameStatus.Image = Properties.Resources.lost;
+            gameOver = true;
         }
 
         Color Revealed(int Component)
@@ -314,6 +367,14 @@ namespace MineSweeper
             for (int g = 0; g < palette.Length; g++)
                 if (c == g) return palette[g];
             return new Color();
+        }
+
+        class Land
+        {
+            public Button Btn { get; set; }
+            public int Count { get; set; }
+            //public bool IsFlagged { get; set; }
+            public bool IsMine { get; set; }
         }
     }
 }

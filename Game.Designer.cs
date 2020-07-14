@@ -56,7 +56,7 @@
             this.NudBombCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NudBombCounter.Location = new System.Drawing.Point(170, 87);
             this.NudBombCounter.Maximum = new decimal(new int[] {
-            99,
+            91,
             0,
             0,
             0});
