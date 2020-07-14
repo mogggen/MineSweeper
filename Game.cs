@@ -10,6 +10,7 @@ namespace MineSweeper
         int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
+        Color hidden = Color.LightGray;
 
         Land[,] land;
 
@@ -20,9 +21,9 @@ namespace MineSweeper
         {
             InitializeComponent();
 
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
+            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             flags = 0; // Number of flags used.
             first = true; // Boolean to let the mines be placed once, and asuring that you won't sweep a mine on first sweep.
             replay = false; // Gives the player the oppertunity to replay.
@@ -38,8 +39,8 @@ namespace MineSweeper
                     {
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
-                        ForeColor = Color.LightGray,
-                        BackColor = Color.LightGray,
+                        ForeColor =
+                        BackColor = hidden,
                         Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
                         Size = new Size(s, s),
                         Tag = new Point(x, y),
@@ -57,7 +58,6 @@ namespace MineSweeper
             first = true;
             flags = 0;
             mines = (int)NudBombCounter.Value;
-            GameStatus.BackColor = Color.LightGray;
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             LblGameStatus.Visible = false;
             GameStatus.Image = Properties.Resources.playing;
@@ -68,7 +68,7 @@ namespace MineSweeper
                 {
                     if (land[x, y].Btn.ForeColor != Color.White)
                         land[x, y].Btn.BackColor =
-                        land[x, y].Btn.ForeColor = Color.LightGray;
+                        land[x, y].Btn.ForeColor = hidden;
                     //replay puzzle
                     if (!replay)
                         land[x, y].IsMine = false;
@@ -136,16 +136,35 @@ namespace MineSweeper
         {
             Point p = (Point)b.Tag;
             int ned, sid, placed = 0;
+            bool avalible = false;
 
             while (placed < mines)
             {
                 ned = rand.Next(h);
                 sid = rand.Next(w);
-                if (!land[sid, ned].IsMine && (p.Y != ned || p.X != sid))
+
+                if (!land[sid, ned].IsMine)
                 {
-                    land[sid, ned].IsMine = true;
-                    land[sid, ned].Btn.Text = "X";
-                    placed++;
+                    avalible = true;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        try
+                        {
+                            if (p.X + i % 3 - 1 == sid && p.Y + i / 3 - 1 == ned
+                                //&& w * h - mines > 8
+                                )
+                            {
+                                avalible = false;
+                            }       
+                        }
+                        catch (IndexOutOfRangeException) { }
+                    }
+                    if (avalible)
+                    {
+                        land[sid, ned].IsMine = true;
+                        land[sid, ned].Btn.Text = "X";
+                        placed++;
+                    }
                 }
             }
 
@@ -260,7 +279,7 @@ namespace MineSweeper
             if (land[x, y].Btn.Text == "F" ||
                 land[x, y].Btn.BackColor == Revealed(0)) { return; }
 
-            if (land[x, y].Btn.BackColor == Color.LightGray)
+            if (land[x, y].Btn.BackColor == hidden)
             {
                 land[x, y].Btn.BackColor = Revealed(0);
                 land[x, y].Btn.ForeColor = Revealed(int.Parse(land[x, y].Btn.Text));
