@@ -115,6 +115,7 @@
             this.BtnReplay.TabIndex = 5;
             this.BtnReplay.Text = "Replay this puzzle";
             this.BtnReplay.UseVisualStyleBackColor = true;
+            this.BtnReplay.Visible = false;
             this.BtnReplay.Click += new System.EventHandler(this.BtnReplay_Click);
             // 
             // Game
@@ -132,6 +133,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game";
             this.Text = "MineSweeper";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.SizeChanged += new System.EventHandler(this.Game_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).EndInit();

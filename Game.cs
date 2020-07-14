@@ -7,7 +7,7 @@ namespace MineSweeper
     public partial class Game : Form
     {
         Random rand = new Random(); // module is used to distribute mines.
-        int w = 10, h = 10, s = 35, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
+        int w = 10, h = 10, s = 34, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
         Color hidden = Color.LightGray;
@@ -21,9 +21,8 @@ namespace MineSweeper
         public Game()
         {
             InitializeComponent();
-            BackColor = Color.Gray;
 
-            LblGameStatus.Visible = false;
+            NudBombCounter.Maximum = w * h - 9 >= 0 ? w * h - 9 : 0;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
             LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
             flags = 0; // Number of flags used.
@@ -62,7 +61,13 @@ namespace MineSweeper
                 if (MouseButtons == MouseButtons.Left && b.Text != "F")
                 {
                     if (b.BackColor == hidden)
-                        LeftClick(b);
+                        LeftClick();
+                    else if (b.BackColor == Revealed(0))
+                        SmartClick(land[((Point)b.Tag).X, ((Point)b.Tag).Y]);
+                }
+
+                if (MouseButtons == MouseButtons.Middle)
+                {
                     if (b.BackColor == Revealed(0))
                         SmartClick(land[((Point)b.Tag).X, ((Point)b.Tag).Y]);
                 }
@@ -141,7 +146,7 @@ namespace MineSweeper
         }
 
         //places mines
-        void First(Button b)
+        void First()
         {
             Point p = (Point)b.Tag;
             int ned, sid, placed = 0;
@@ -200,12 +205,12 @@ namespace MineSweeper
             first = false;
         }
 
-        void LeftClick(Button b)
+        void LeftClick()
         {
             Point p = (Point)b.Tag;
 
             if (first && !replay)
-                First(b);
+                First();
 
             if (land[p.X, p.Y].IsMine)
             {
@@ -286,17 +291,16 @@ namespace MineSweeper
 
                 if (land[x, y].Btn.Text == "0")
                     for (int i = 0; i < 9; i++)
-                        if (i != 4)
-                            try
+                        try
+                        {
+                            if (!land[x + i % 3 - 1, y + i / 3 - 1].IsMine)
+                                Sweep(x + i % 3 - 1, y + i / 3 - 1);
+                            else
                             {
-                                if (!land[x + i % 3 - 1, y + i / 3 - 1].IsMine)
-                                    Sweep(x + i % 3 - 1, y + i / 3 - 1);
-                                else
-                                {
-                                    Lose(x + i % 3 - 1, y + i / 3 - 1);
-                                }
+                                Lose(x + i % 3 - 1, y + i / 3 - 1);
                             }
-                            catch (IndexOutOfRangeException) { }
+                        }
+                        catch (IndexOutOfRangeException) { }
             }
             return;
         }
