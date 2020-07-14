@@ -200,6 +200,35 @@ namespace MineSweeper
             first = false;
         }
 
+        void LeftClick(Button b)
+        {
+            Point p = (Point)b.Tag;
+
+            if (first && !replay)
+                First(b);
+
+            if (land[p.X, p.Y].IsMine)
+            {
+                Lose(p.X, p.Y);
+            }
+            else
+            {
+                Sweep(p.X, p.Y);
+            }
+
+            //check for win
+            int revealed = 0;
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                    if (land[x, y].Btn.BackColor == Revealed(0))
+                        revealed++;
+
+            if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
+            {
+                Win();
+            }
+        }
+
         //to skip a few clicks
         void SmartClick(Land l)
         {
@@ -219,42 +248,15 @@ namespace MineSweeper
                     if (i != 4)
                         try
                         {
-                            if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine &&
-                                land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text != "F")
-                                Sweep(p.X + i % 3 - 1, p.Y + i / 3 - 1);
-                            else if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine)
-                                Lose();
+                            if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text != "F")
+                            {
+                                if (!land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine)
+                                    Sweep(p.X + i % 3 - 1, p.Y + i / 3 - 1);
+                                else
+                                    Lose(p.X + i % 3 - 1, p.Y + i / 3 - 1);
+                            }
                         }
                         catch (IndexOutOfRangeException) { }
-            }
-
-            //check for win
-            int revealed = 0;
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < w; x++)
-                    if (land[x, y].Btn.BackColor == Revealed(0))
-                        revealed++;
-
-            if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
-            {
-                Win();
-            }
-        }
-
-        void LeftClick(Button b)
-        {
-            Point p = (Point)b.Tag;
-
-            if (first && !replay)
-                First(b);
-
-            if (land[p.X, p.Y].IsMine)
-            {
-                Lose();
-            }
-            else
-            {
-                Sweep(p.X, p.Y);
             }
 
             //check for win
@@ -291,7 +293,7 @@ namespace MineSweeper
                                     Sweep(x + i % 3 - 1, y + i / 3 - 1);
                                 else
                                 {
-                                    Lose();
+                                    Lose(x + i % 3 - 1, y + i / 3 - 1);
                                 }
                             }
                             catch (IndexOutOfRangeException) { }
@@ -322,23 +324,23 @@ namespace MineSweeper
             gameOver = true;
         }
 
-        void Lose()
+        void Lose(int x, int y)
         {
-            b.BackColor = Color.Red;
+            land[x, y].Btn.BackColor = Color.Red;
 
-            for (int y = 0; y < h; y++)
+            for (int ned = 0; ned < h; ned++)
             {
-                for (int x = 0; x < w; x++)
+                for (int sid = 0; sid < w; sid++)
                 {
-                    if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                    if (land[sid, ned].IsMine && land[sid, ned].Btn.Text != "F")
                     {
-                        land[x, y].Btn.ForeColor = Color.Black;
-                        land[x, y].Btn.Text = "X";
+                        land[sid, ned].Btn.ForeColor = Color.Black;
+                        land[sid, ned].Btn.Text = "X";
                     }
-                    else if (!land[x, y].IsMine && land[x, y].Btn.Text == "F")
+                    else if (!land[sid, ned].IsMine && land[sid, ned].Btn.Text == "F")
                     {
-                        land[x, y].Btn.ForeColor = Color.Blue;
-                        land[x, y].Btn.Text = ">";
+                        land[sid, ned].Btn.ForeColor = Color.Blue;
+                        land[sid, ned].Btn.Text = ">";
                     }
                 }
             }
