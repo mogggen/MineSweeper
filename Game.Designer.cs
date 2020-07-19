@@ -33,14 +33,16 @@
             this.LblMineCounter = new System.Windows.Forms.Label();
             this.LblGameStatus = new System.Windows.Forms.Label();
             this.Help = new System.Windows.Forms.Button();
-            this.btnReplay = new System.Windows.Forms.Button();
+            this.BtnReplay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).BeginInit();
             this.SuspendLayout();
             // 
             // GameStatus
             // 
+            this.GameStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.GameStatus.BackColor = System.Drawing.Color.LightGray;
+            this.GameStatus.Image = global::MineSweeper.Properties.Resources.playing;
             this.GameStatus.Location = new System.Drawing.Point(214, 23);
             this.GameStatus.Name = "GameStatus";
             this.GameStatus.Size = new System.Drawing.Size(100, 84);
@@ -51,9 +53,10 @@
             // 
             // NudBombCounter
             // 
+            this.NudBombCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NudBombCounter.Location = new System.Drawing.Point(170, 87);
             this.NudBombCounter.Maximum = new decimal(new int[] {
-            99,
+            91,
             0,
             0,
             0});
@@ -68,9 +71,10 @@
             // 
             // LblMineCounter
             // 
+            this.LblMineCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LblMineCounter.AutoSize = true;
             this.LblMineCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblMineCounter.ForeColor = System.Drawing.Color.Red;
+            this.LblMineCounter.ForeColor = System.Drawing.Color.Black;
             this.LblMineCounter.Location = new System.Drawing.Point(330, 36);
             this.LblMineCounter.Name = "LblMineCounter";
             this.LblMineCounter.Size = new System.Drawing.Size(185, 58);
@@ -80,14 +84,17 @@
             // 
             // LblGameStatus
             // 
+            this.LblGameStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.LblGameStatus.AutoSize = true;
             this.LblGameStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblGameStatus.ForeColor = System.Drawing.Color.Red;
+            this.LblGameStatus.ForeColor = System.Drawing.Color.ForestGreen;
             this.LblGameStatus.Location = new System.Drawing.Point(197, 527);
             this.LblGameStatus.Name = "LblGameStatus";
             this.LblGameStatus.Size = new System.Drawing.Size(117, 29);
             this.LblGameStatus.TabIndex = 3;
             this.LblGameStatus.Text = "You Win!";
+            this.LblGameStatus.Visible = false;
             // 
             // Help
             // 
@@ -99,23 +106,25 @@
             this.Help.UseVisualStyleBackColor = true;
             this.Help.Click += new System.EventHandler(this.Help_Click);
             // 
-            // btnReplay
+            // BtnReplay
             // 
-            this.btnReplay.Location = new System.Drawing.Point(434, 532);
-            this.btnReplay.Name = "btnReplay";
-            this.btnReplay.Size = new System.Drawing.Size(115, 48);
-            this.btnReplay.TabIndex = 5;
-            this.btnReplay.Text = "Replay this puzzle";
-            this.btnReplay.UseVisualStyleBackColor = true;
-            this.btnReplay.Click += new System.EventHandler(this.BtnReplay_Click);
+            this.BtnReplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnReplay.Location = new System.Drawing.Point(434, 532);
+            this.BtnReplay.Name = "BtnReplay";
+            this.BtnReplay.Size = new System.Drawing.Size(115, 48);
+            this.BtnReplay.TabIndex = 5;
+            this.BtnReplay.Text = "Replay this puzzle";
+            this.BtnReplay.UseVisualStyleBackColor = true;
+            this.BtnReplay.Visible = false;
+            this.BtnReplay.Click += new System.EventHandler(this.BtnReplay_Click);
             // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(561, 592);
-            this.Controls.Add(this.btnReplay);
+            this.Controls.Add(this.BtnReplay);
             this.Controls.Add(this.Help);
             this.Controls.Add(this.LblGameStatus);
             this.Controls.Add(this.LblMineCounter);
@@ -124,6 +133,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game";
             this.Text = "MineSweeper";
+            this.SizeChanged += new System.EventHandler(this.Game_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).EndInit();
             this.ResumeLayout(false);
@@ -138,7 +148,7 @@
         private System.Windows.Forms.Label LblMineCounter;
         private System.Windows.Forms.Label LblGameStatus;
         private System.Windows.Forms.Button Help;
-        private System.Windows.Forms.Button btnReplay;
+        private System.Windows.Forms.Button BtnReplay;
     }
 }
 
