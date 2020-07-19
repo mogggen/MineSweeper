@@ -57,6 +57,7 @@ namespace MineSweeper
             if (!gameOver)
             {
                 b = (Button)sender;
+                p = (Point)b.Tag;
 
                 if (MouseButtons == MouseButtons.Left && b.Text != "F")
                 {
