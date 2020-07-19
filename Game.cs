@@ -163,16 +163,14 @@ namespace MineSweeper
                     avalible = true;
                     for (int i = 0; i < 9; i++)
                     {
-                        try
+                        if (p.X + i % 3 - 1 < w &&
+                            p.Y + i / 3 - 1 < h &&
+                            p.X + i % 3 - 1 >= 0 &&
+                            p.Y + i / 3 - 1 >= 0 &&
+                            p.X + i % 3 - 1 == sid && p.Y + i / 3 - 1 == ned)
                         {
-                            if (p.X + i % 3 - 1 == sid && p.Y + i / 3 - 1 == ned
-                                && w * h - mines >= 9
-                                )
-                            {
-                                avalible = false;
-                            }       
+                            avalible = false;
                         }
-                        catch (IndexOutOfRangeException) { }
                     }
                     if (avalible)
                     {
@@ -192,11 +190,12 @@ namespace MineSweeper
                     for (int i = 0; i < 9; i++)
                     {
                         if (land[x, y].IsMine) break;
-                        try
-                        {
-                            if (land[x + i % 3 - 1, y + i / 3 - 1].IsMine && i != 4) land[x, y].Count++;
-                        }
-                        catch (IndexOutOfRangeException) { }
+                        if (p.X + i % 3 - 1 < w &&
+                            p.Y + i / 3 - 1 < h &&
+                            p.X + i % 3 - 1 >= 0 &&
+                            p.Y + i / 3 - 1 >= 0 &&
+                            i != 4 &&
+                            land[x + i % 3 - 1, y + i / 3 - 1].IsMine) land[x, y].Count++;
                     }
                     land[x, y].Btn.Text = land[x, y].Count.ToString();
                     if (x != p.X || y != p.Y) land[x, y].Btn.ForeColor = b.BackColor;
@@ -242,27 +241,27 @@ namespace MineSweeper
             int flags = 0;
             for (int i = 0; i < 9; i++)
             {
-                try
-                {
-                    if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text == "F") flags++;
-                }
-                catch (IndexOutOfRangeException) { }
+                if (p.X + i % 3 - 1 < w &&
+                    p.Y + i / 3 - 1 < h &&
+                    p.X + i % 3 - 1 >= 0 &&
+                    p.Y + i / 3 - 1 >= 0 &&
+                    land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text == "F") flags++;
             }
             if (flags == land[p.X, p.Y].Count)
             {
                 for (int i = 0; i < 9; i++)
                     if (i != 4)
-                        try
+                        if (p.X + i % 3 - 1 < w &&
+                            p.Y + i / 3 - 1 < h &&
+                            p.X + i % 3 - 1 >= 0 &&
+                            p.Y + i / 3 - 1 >= 0 &&
+                            land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text != "F")
                         {
-                            if (land[p.X + i % 3 - 1, p.Y + i / 3 - 1].Btn.Text != "F")
-                            {
-                                if (!land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine)
-                                    Sweep(p.X + i % 3 - 1, p.Y + i / 3 - 1);
-                                else
-                                    Lose(p.X + i % 3 - 1, p.Y + i / 3 - 1);
-                            }
+                            if (!land[p.X + i % 3 - 1, p.Y + i / 3 - 1].IsMine)
+                                Sweep(p.X + i % 3 - 1, p.Y + i / 3 - 1);
+                            else
+                                Lose(p.X + i % 3 - 1, p.Y + i / 3 - 1);
                         }
-                        catch (IndexOutOfRangeException) { }
             }
 
             //check for win
@@ -292,7 +291,10 @@ namespace MineSweeper
 
                 if (land[x, y].Btn.Text == "0")
                     for (int i = 0; i < 9; i++)
-                        try
+                        if (p.X + i % 3 - 1 < w &&
+                            p.Y + i / 3 - 1 < h &&
+                            p.X + i % 3 - 1 >= 0 &&
+                            p.Y + i / 3 - 1 >= 0)
                         {
                             if (!land[x + i % 3 - 1, y + i / 3 - 1].IsMine)
                                 Sweep(x + i % 3 - 1, y + i / 3 - 1);
@@ -301,7 +303,6 @@ namespace MineSweeper
                                 Lose(x + i % 3 - 1, y + i / 3 - 1);
                             }
                         }
-                        catch (IndexOutOfRangeException) { }
             }
             return;
         }
