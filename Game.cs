@@ -190,10 +190,10 @@ namespace MineSweeper
                     for (int i = 0; i < 9; i++)
                     {
                         if (land[x, y].IsMine) break;
-                        if (p.X + i % 3 - 1 < w &&
-                            p.Y + i / 3 - 1 < h &&
-                            p.X + i % 3 - 1 >= 0 &&
-                            p.Y + i / 3 - 1 >= 0 &&
+                        if (x + i % 3 - 1 < w &&
+                            y + i / 3 - 1 < h &&
+                            x + i % 3 - 1 >= 0 &&
+                            y + i / 3 - 1 >= 0 &&
                             i != 4 &&
                             land[x + i % 3 - 1, y + i / 3 - 1].IsMine) land[x, y].Count++;
                     }
@@ -291,10 +291,10 @@ namespace MineSweeper
 
                 if (land[x, y].Btn.Text == "0")
                     for (int i = 0; i < 9; i++)
-                        if (p.X + i % 3 - 1 < w &&
-                            p.Y + i / 3 - 1 < h &&
-                            p.X + i % 3 - 1 >= 0 &&
-                            p.Y + i / 3 - 1 >= 0)
+                        if (x + i % 3 - 1 < w &&
+                            y + i / 3 - 1 < h &&
+                            x + i % 3 - 1 >= 0 &&
+                            y + i / 3 - 1 >= 0)
                         {
                             if (!land[x + i % 3 - 1, y + i / 3 - 1].IsMine)
                                 Sweep(x + i % 3 - 1, y + i / 3 - 1);
