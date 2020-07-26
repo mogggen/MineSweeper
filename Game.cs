@@ -75,18 +75,21 @@ namespace MineSweeper
 
                 if (MouseButtons == MouseButtons.Right && !first)
                 {
-                    if (b.Text != "F" && b.BackColor != Revealed(0))
+                    if (b.BackColor != Revealed(0))
                     {
-                        b.ForeColor = Color.Red;
-                        flags++;
-                        b.Text = "F";
-                    }
-
-                    else if (b.BackColor != Revealed(0))
-                    {
-                        b.ForeColor = b.BackColor;
-                        flags--;
-                        b.Text = land[p.X, p.Y].Count.ToString();
+                        if (b.Text != "F")
+                        {
+                            b.ForeColor = Color.Red;
+                            flags++;
+                            b.Text = "F";
+                        }
+                        else
+                        {
+                            b.ForeColor = b.BackColor;
+                            flags--;
+                            b.Text = land[p.X, p.Y].Count.ToString();
+                        }
+                        //smartFlag();
                     }
                     LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
                 }
@@ -179,6 +182,9 @@ namespace MineSweeper
                         placed++;
                     }
                 }
+
+                //MainForm
+                NudBombCounter.Enabled = false;
             }
 
             for (int y = 0; y < h; y++)
@@ -307,6 +313,28 @@ namespace MineSweeper
             return;
         }
 
+        void smartFlag()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                int px = p.X + i % 3 - 1;
+                int py = p.Y + i / 3 - 1;
+
+                if (px < w &&
+                    py < h &&
+                    px >= 0 &&
+                    py >= 0 &&
+                    i != 4 &&
+                    land[px, py].Btn.Text != "F" &&
+                    int.Parse(land[px, py].Btn.Text) >= 0)
+                {
+                    land[px, py].Count += b.Text == "F" ? -1 : 1;
+                    land[px, py].Btn.Text = land[px, py].Count.ToString();
+                    land[px, py].Btn.ForeColor = land[px, py].Btn.ForeColor == hidden ? hidden : Revealed(land[px, py].Count);
+                }
+            }
+        }
+
         void Win()
         {
             for (int y = 0; y < h; y++)
@@ -355,6 +383,7 @@ namespace MineSweeper
             LblGameStatus.Text = "Game Over";
             GameStatus.Image = Properties.Resources.lost;
             gameOver = true;
+            LblMineCounter.Text = "< - Press me!";
         }
 
         Color Revealed(int Component)
