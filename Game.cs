@@ -24,7 +24,7 @@ namespace MineSweeper
 
             NudBombCounter.Maximum = w * h - 9 >= 0 ? w * h - 9 : 0;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblMineCounter.Text = $"bombs: {mines - flags}";
             flags = 0; // Number of flags used.
             first = true; // Boolean to let the mines be placed once, and asuring that you won't sweep a mine on first sweep.
             replay = false; // Gives the player the oppertunity to replay.
@@ -41,7 +41,6 @@ namespace MineSweeper
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
                         BackColor = hidden,
-                        Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m)),
                         Size = new Size(s, s),
                         Tag = new Point(x, y),
                     };
@@ -50,6 +49,8 @@ namespace MineSweeper
                     land[x, y].Btn.MouseDown += Game_MouseDown;
                 }
             }
+
+            Game_SizeChanged(new object(), new EventArgs());
         }
 
         private void Game_MouseDown(object sender, MouseEventArgs e)
@@ -59,7 +60,7 @@ namespace MineSweeper
                 b = (Button)sender;
                 p = (Point)b.Tag;
 
-                if (MouseButtons == MouseButtons.Left && b.Text != "F")
+                if (MouseButtons == MouseButtons.Left)
                 {
                     if (b.BackColor == hidden)
                         LeftClick();
@@ -73,9 +74,9 @@ namespace MineSweeper
                         SmartClick(land[((Point)b.Tag).X, ((Point)b.Tag).Y]);
                 }
 
-                if (MouseButtons == MouseButtons.Right && !first)
+                if (MouseButtons == MouseButtons.Right)
                 {
-                    if (b.BackColor != Revealed(0))
+                    if (b.BackColor != Revealed(0) && !first)
                     {
                         if (b.Text != "F")
                         {
@@ -91,7 +92,7 @@ namespace MineSweeper
                         }
                         //smartFlag();
                     }
-                    LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+                    LblMineCounter.Text = $"bombs: {mines - flags}";
                 }
             }
         }
@@ -103,7 +104,7 @@ namespace MineSweeper
             first = true;
             flags = 0;
             mines = (int)NudBombCounter.Value;
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
+            LblMineCounter.Text = $"bombs: {mines - flags}";
             LblGameStatus.Visible = false;
             GameStatus.Image = Properties.Resources.playing;
 
@@ -136,7 +137,7 @@ namespace MineSweeper
             Help help = new Help();
             help.Show();
         }
-        
+
         //For bigger puzzles
         private void Game_SizeChanged(object sender, EventArgs e)
         {
@@ -144,9 +145,14 @@ namespace MineSweeper
             {
                 for (int x = 0; x < w; x++)
                 {
-                    land[x, y].Btn.Location = new Point(Width / 2 - (w / 2 * s + (w / 2 - 1)) + x * (s + m), Height / 2 - (h / 2 * s + (h / 2 - 1)) + y * (s + m));
+                    land[x, y].Btn.Location = new Point((Width - (w + 1) * s) / 2 + x * (s + m), 128 + y * (s + m));
                 }
             }
+
+            NudBombCounter.Location = new Point(Width / 2 - NudBombCounter.Size.Width - GameStatus.Size.Width - 6, 87);
+            GameStatus.Location = new Point(NudBombCounter.Location.X + NudBombCounter.Size.Width + 6, 23);
+            LblMineCounter.Location = new Point(GameStatus.Location.X + GameStatus.Size.Width + 6, 30);
+            LblGameStatus.Location = new Point(GameStatus.Location.X + GameStatus.Size.Width + 6, 77);
         }
 
         //places mines
@@ -182,9 +188,6 @@ namespace MineSweeper
                         placed++;
                     }
                 }
-
-                //MainForm
-                NudBombCounter.Enabled = false;
             }
 
             for (int y = 0; y < h; y++)
@@ -350,12 +353,8 @@ namespace MineSweeper
                     }
                 }
             }
-            LblMineCounter.Text = $"mines flagged:\n{flags} / {mines}";
-            LblGameStatus.Visible = true;
-            LblGameStatus.ForeColor = Color.ForestGreen;
-            LblGameStatus.Text = "You Win!";
-            GameStatus.Image = Properties.Resources.win;
-            gameOver = true;
+            LblMineCounter.Text = $"bombs: {mines - flags}";
+            GameState(true);
         }
 
         void Lose(int x, int y)
@@ -378,12 +377,27 @@ namespace MineSweeper
                     }
                 }
             }
+            GameState(false);
+        }
+
+        void GameState(bool win)
+        {
             LblGameStatus.Visible = true;
-            LblGameStatus.ForeColor = Color.DarkRed;
-            LblGameStatus.Text = "Game Over";
-            GameStatus.Image = Properties.Resources.lost;
             gameOver = true;
             LblMineCounter.Text = "< - Press me!";
+
+            if (win)
+            {
+                LblGameStatus.ForeColor = Color.ForestGreen;
+                LblGameStatus.Text = "You Win!";
+                GameStatus.Image = Properties.Resources.win;
+            }
+            else
+            {
+                LblGameStatus.ForeColor = Color.DarkRed;
+                LblGameStatus.Text = "Game Over";
+                GameStatus.Image = Properties.Resources.lost;
+            }
         }
 
         Color Revealed(int Component)

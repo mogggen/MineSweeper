@@ -40,10 +40,11 @@
             // 
             // GameStatus
             // 
-            this.GameStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GameStatus.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.GameStatus.BackColor = System.Drawing.Color.LightGray;
+            this.GameStatus.ErrorImage = null;
             this.GameStatus.Image = global::MineSweeper.Properties.Resources.playing;
-            this.GameStatus.Location = new System.Drawing.Point(214, 23);
+            this.GameStatus.Location = new System.Drawing.Point(177, 23);
             this.GameStatus.Name = "GameStatus";
             this.GameStatus.Size = new System.Drawing.Size(100, 84);
             this.GameStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -53,8 +54,8 @@
             // 
             // NudBombCounter
             // 
-            this.NudBombCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NudBombCounter.Location = new System.Drawing.Point(170, 87);
+            this.NudBombCounter.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.NudBombCounter.Location = new System.Drawing.Point(133, 87);
             this.NudBombCounter.Maximum = new decimal(new int[] {
             91,
             0,
@@ -71,15 +72,15 @@
             // 
             // LblMineCounter
             // 
-            this.LblMineCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LblMineCounter.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LblMineCounter.AutoSize = true;
             this.LblMineCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblMineCounter.ForeColor = System.Drawing.Color.Black;
-            this.LblMineCounter.Location = new System.Drawing.Point(330, 36);
+            this.LblMineCounter.Location = new System.Drawing.Point(293, 36);
             this.LblMineCounter.Name = "LblMineCounter";
-            this.LblMineCounter.Size = new System.Drawing.Size(185, 58);
+            this.LblMineCounter.Size = new System.Drawing.Size(136, 29);
             this.LblMineCounter.TabIndex = 2;
-            this.LblMineCounter.Text = "Mines flagged:\r\n0 / 16";
+            this.LblMineCounter.Text = "Bombs: 16";
             this.LblMineCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LblGameStatus
@@ -89,7 +90,7 @@
             this.LblGameStatus.AutoSize = true;
             this.LblGameStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblGameStatus.ForeColor = System.Drawing.Color.ForestGreen;
-            this.LblGameStatus.Location = new System.Drawing.Point(197, 527);
+            this.LblGameStatus.Location = new System.Drawing.Point(293, 77);
             this.LblGameStatus.Name = "LblGameStatus";
             this.LblGameStatus.Size = new System.Drawing.Size(117, 29);
             this.LblGameStatus.TabIndex = 3;
@@ -104,12 +105,13 @@
             this.Help.TabIndex = 4;
             this.Help.Text = "Help";
             this.Help.UseVisualStyleBackColor = true;
+            this.Help.Visible = false;
             this.Help.Click += new System.EventHandler(this.Help_Click);
             // 
             // BtnReplay
             // 
             this.BtnReplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnReplay.Location = new System.Drawing.Point(434, 532);
+            this.BtnReplay.Location = new System.Drawing.Point(314, 457);
             this.BtnReplay.Name = "BtnReplay";
             this.BtnReplay.Size = new System.Drawing.Size(115, 48);
             this.BtnReplay.TabIndex = 5;
@@ -123,7 +125,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(561, 592);
+            this.ClientSize = new System.Drawing.Size(441, 517);
             this.Controls.Add(this.BtnReplay);
             this.Controls.Add(this.Help);
             this.Controls.Add(this.LblGameStatus);
