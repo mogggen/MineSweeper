@@ -221,14 +221,7 @@ namespace MineSweeper
             if (first && !replay)
                 First();
 
-            if (land[p.X, p.Y].IsMine)
-            {
-                Lose(p.X, p.Y);
-            }
-            else
-            {
-                Sweep(p.X, p.Y);
-            }
+            Sweep(p.X, p.Y);
 
             //check for win
             int revealed = 0;
