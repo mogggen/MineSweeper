@@ -34,7 +34,7 @@ namespace MineSweeper
         public Game()
         {
             InitializeComponent();
-
+            Text = $"MineSweeper: completed: {(int)((float)revealed / (w * h - mines) * 100)}%";
             NudBombCounter.Maximum = w * h - 13 >= 0 ? w * h - 13 : 0;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
             LblMineCounter.Text = $"bombs: {mines - flags}";
@@ -141,6 +141,8 @@ namespace MineSweeper
             }
             gameOver = false;
             first = true;
+
+            Text = $"MineSweeper: completed: {(int)((float)revealed / (w * h - mines) * 100)}%";
         }
 
         //Replay current puzzle
