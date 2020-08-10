@@ -119,6 +119,7 @@ namespace MineSweeper
         {
             replay = false;
             first = true;
+            revealed = 0;
             flags = 0;
             mines = (int)NudBombCounter.Value;
             LblMineCounter.Text = $"bombs: {mines - flags}";
