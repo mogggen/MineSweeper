@@ -34,7 +34,7 @@ namespace MineSweeper
         {
             InitializeComponent();
 
-            NudBombCounter.Maximum = w * h - 9 >= 0 ? w * h - 9 : 0;
+            NudBombCounter.Maximum = w * h - 13 >= 0 ? w * h - 13 : 0;
             mines = (int)NudBombCounter.Value; // Number of mines on the board.
             LblMineCounter.Text = $"bombs: {mines - flags}";
             flags = 0; // Number of flags used.
@@ -52,12 +52,14 @@ namespace MineSweeper
                     {
                         Anchor = AnchorStyles.Top | AnchorStyles.Left,
                         Font = new Font("Microsoft sans serif", s - 19, FontStyle.Regular), // Fontsize: 16, Size: 35
-                        BackColor = hidden,
+                        BackColor = !((x == 0 || x == w - 1) && y == 0 || (x == 0 || x == w - 1) && y == h - 1) ? hidden : Revealed(0),
                         Size = new Size(s, s),
                         Tag = new Point(x, y),
                     };
 
-                    Controls.Add(land[x, y].Btn);
+                    if (!((x == 0 || x == w - 1) && y == 0 || 
+                        (x == 0 || x == w - 1) && y == h - 1))
+                        Controls.Add(land[x, y].Btn);
                     land[x, y].Btn.MouseDown += Game_MouseDown;
                 }
             }
@@ -188,7 +190,11 @@ namespace MineSweeper
                             p.Y + i / 3 - 1 < h &&
                             p.X + i % 3 - 1 >= 0 &&
                             p.Y + i / 3 - 1 >= 0 &&
-                            p.X + i % 3 - 1 == sid && p.Y + i / 3 - 1 == ned)
+
+                            p.X + i % 3 - 1 == sid &&
+                            p.Y + i / 3 - 1 == ned &&
+                            (!((sid == 0 || sid == w - 1) && ned == 0 ||
+                            (sid == 0 || sid == w - 1) && ned == h - 1)))
                         {
                             avalible = false;
                         }
@@ -279,7 +285,7 @@ namespace MineSweeper
         //Recursivly sweeps all adjacent land.
         void Sweep(int x, int y)
         {
-            if (land[x, y].IsMine) Lose(x, y);
+            if (land[x, y].IsMine && land[x, y].Btn.Text != "F") Lose(x, y);
 
             if (land[x, y].Btn.BackColor == Revealed(0) ||
                 land[x, y].Btn.Text == "F" ||
