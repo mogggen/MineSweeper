@@ -6,6 +6,7 @@ namespace MineSweeper
 {
     public partial class Game : Form
     {
+        int revealed = 0;
         Random rand = new Random(); // module is used to distribute mines.
         int w = 10, h = 10, s = 34, m = 0; // Dimensions of button: w=width, h=height, s=size, m=margin
         Button b; // The properites of the box that was pressed.
@@ -108,6 +109,8 @@ namespace MineSweeper
                     }
                     LblMineCounter.Text = $"bombs: {mines - flags}";
                 }
+
+                Text = $"MineSweeper: completed: {(int)((float)revealed / (w * h - mines) * 100)}%";
             }
         }
 
@@ -127,8 +130,10 @@ namespace MineSweeper
                 for (int x = 0; x < w; x++)
                 {
                     if (land[x, y].Btn.ForeColor != Color.White)
-                        land[x, y].Btn.BackColor =
+                    {
+                        land[x, y].Btn.BackColor = !((x == 0 || x == w - 1) && y == 0 || (x == 0 || x == w - 1) && y == h - 1) ? hidden : Revealed(0);
                         land[x, y].Btn.ForeColor = hidden;
+                    }
                     //replay puzzle
                     if (!replay)
                         land[x, y].IsMine = false;
@@ -181,7 +186,9 @@ namespace MineSweeper
                 ned = rand.Next(h);
                 sid = rand.Next(w);
 
-                if (!land[sid, ned].IsMine)
+                if (!land[sid, ned].IsMine &&
+                    !((sid == 0 || sid == w - 1) && ned == 0 ||
+                            (sid == 0 || sid == w - 1) && ned == h - 1))
                 {
                     avalible = true;
                     for (int i = 0; i < 9; i++)
@@ -340,19 +347,20 @@ namespace MineSweeper
         //Check for win
         void Win()
         {
-            int revealed = 0;
+            revealed = 0;
             for (int y = 0; y < h; y++)
                 for (int x = 0; x < w; x++)
                     if (land[x, y].Btn.BackColor == Revealed(0))
                         revealed++;
 
-            if (revealed == w * h - mines && !land[p.X, p.Y].IsMine)
+            if (revealed == w * h - mines/* && !land[p.X, p.Y].IsMine*/)
             {
                 for (int y = 0; y < h; y++)
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        if (land[x, y].IsMine && land[x, y].Btn.Text != "F")
+                        if (land[x, y].IsMine &&
+                            land[x, y].Btn.Text != "F")
                         {
                             land[x, y].Btn.ForeColor = Color.Red;
                             flags++;
@@ -418,12 +426,14 @@ namespace MineSweeper
             return new Color();
         }
 
-        class Land
+        
+    }
+
+    class Land
         {
             public Button Btn { get; set; }
             public int Count { get; set; }
             //public bool IsFlagged { get; set; }
             public bool IsMine { get; set; }
         }
-    }
 }
