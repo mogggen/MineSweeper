@@ -32,8 +32,6 @@
             this.NudBombCounter = new System.Windows.Forms.NumericUpDown();
             this.LblMineCounter = new System.Windows.Forms.Label();
             this.LblGameStatus = new System.Windows.Forms.Label();
-            this.Help = new System.Windows.Forms.Button();
-            this.BtnReplay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).BeginInit();
             this.SuspendLayout();
@@ -97,37 +95,12 @@
             this.LblGameStatus.Text = "You Win!";
             this.LblGameStatus.Visible = false;
             // 
-            // Help
-            // 
-            this.Help.Location = new System.Drawing.Point(0, 0);
-            this.Help.Name = "Help";
-            this.Help.Size = new System.Drawing.Size(92, 48);
-            this.Help.TabIndex = 4;
-            this.Help.Text = "Help";
-            this.Help.UseVisualStyleBackColor = true;
-            this.Help.Visible = false;
-            this.Help.Click += new System.EventHandler(this.Help_Click);
-            // 
-            // BtnReplay
-            // 
-            this.BtnReplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnReplay.Location = new System.Drawing.Point(314, 457);
-            this.BtnReplay.Name = "BtnReplay";
-            this.BtnReplay.Size = new System.Drawing.Size(115, 48);
-            this.BtnReplay.TabIndex = 5;
-            this.BtnReplay.Text = "Replay this puzzle";
-            this.BtnReplay.UseVisualStyleBackColor = true;
-            this.BtnReplay.Visible = false;
-            this.BtnReplay.Click += new System.EventHandler(this.BtnReplay_Click);
-            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(441, 517);
-            this.Controls.Add(this.BtnReplay);
-            this.Controls.Add(this.Help);
             this.Controls.Add(this.LblGameStatus);
             this.Controls.Add(this.LblMineCounter);
             this.Controls.Add(this.NudBombCounter);
@@ -149,8 +122,6 @@
         private System.Windows.Forms.NumericUpDown NudBombCounter;
         private System.Windows.Forms.Label LblMineCounter;
         private System.Windows.Forms.Label LblGameStatus;
-        private System.Windows.Forms.Button Help;
-        private System.Windows.Forms.Button BtnReplay;
     }
 }
 
