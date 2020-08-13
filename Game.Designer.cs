@@ -107,7 +107,7 @@
             this.Controls.Add(this.GameStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game";
-            this.Text = "MineSweeper";
+            this.Text = "Minesweeper";
             this.SizeChanged += new System.EventHandler(this.Game_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.GameStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudBombCounter)).EndInit();

@@ -129,11 +129,12 @@ namespace MineSweeper
                     {
                         land[x, y].Btn.BackColor =
                         land[x, y].Btn.ForeColor = hidden;
+                        land[x, y].IsMine = false;
                     }
                 }
             }
-            gameOver = false;
             first = true;
+            gameOver = false;
         }
 
         //For bigger puzzles
@@ -441,10 +442,9 @@ namespace MineSweeper
     }
 
     class Land
-        {
-            public Button Btn { get; set; }
-            public int Count { get; set; }
-            //public bool IsFlagged { get; set; }
-            public bool IsMine { get; set; }
-        }
+    {
+        public Button Btn { get; set; }
+        public int Count { get; set; }
+        public bool IsMine { get; set; }
+    }
 }
