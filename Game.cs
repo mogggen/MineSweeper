@@ -114,6 +114,7 @@ namespace MineSweeper
         //Start new puzzle
         private void GameStatus_Click(object sender, EventArgs e)
         {
+            rand = new Random();
             first = true;
             flags = 0;
             mines = (int)NudBombCounter.Value;
