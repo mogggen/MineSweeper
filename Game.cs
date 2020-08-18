@@ -24,7 +24,7 @@ namespace MineSweeper
                 Color.DimGray,
             };
 
-        Land[,] land;
+        Cell[,] land;
 
         bool gameOver, first;
         int flags, mines;
@@ -39,7 +39,7 @@ namespace MineSweeper
             flags = 0; // Number of flags used.
             first = true; // Boolean to let the mines be placed once, and asuring that you won't sweep a mine on first sweep.
             gameOver = false; // Locking the game state on game over.
-            land = new Land[w, h];
+            land = new Cell[w, h];
 
             for (int y = 0; y < h; y++)
             {
@@ -47,7 +47,7 @@ namespace MineSweeper
                 {
                     if (!IsCorner(x, y))
                     {
-                        land[x, y] = new Land();
+                        land[x, y] = new Cell();
                         land[x, y].Btn = new Button
                         {
                             Anchor = AnchorStyles.Top | AnchorStyles.Left,
@@ -169,17 +169,13 @@ namespace MineSweeper
                 ned = rand.Next(h);
                 sid = rand.Next(w);
 
-                if (!IsCorner(sid, ned) &&
+                if (IsAvalible(sid, ned) &&
                     !land[sid, ned].IsMine)
                 {
                     avalible = true;
                     for (int i = 0; i < 9; i++)
                     {
-                        if (// is within grid
-                            IsAvalible(sid, ned, i) &&
-
-                            // safezone
-                            p.X + i % 3 - 1 == sid &&
+                        if (p.X + i % 3 - 1 == sid &&
                             p.Y + i / 3 - 1 == ned)
                         {
                             avalible = false;
@@ -233,7 +229,7 @@ namespace MineSweeper
         }
 
         //to skip a few clicks
-        void SmartClick(Land l)
+        void SmartClick(Cell l)
         {
             Point p = (Point)l.Btn.Tag;
             int flags = 0;
@@ -442,7 +438,7 @@ namespace MineSweeper
         }
     }
 
-    class Land
+    class Cell
     {
         public Button Btn { get; set; }
         public int Count { get; set; }
