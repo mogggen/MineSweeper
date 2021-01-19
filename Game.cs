@@ -11,18 +11,18 @@ namespace MineSweeper
         Button b; // The properites of the box that was pressed.
         Point p; // The coordinate of the box that was pressed.
         Color hidden = Color.LightGray;
-        readonly Color[] palette =
-            {
-                Color.DarkGray,
-                Color.Blue,
-                Color.Green,
-                Color.Red,
-                Color.Purple,
-                Color.Maroon,
-                Color.Turquoise,
-                Color.Black,
-                Color.DimGray,
-            };
+        Color[] palette =
+        {
+            Color.DarkGray,
+            Color.Blue,
+            Color.Green,
+            Color.Red,
+            Color.Purple,
+            Color.Maroon,
+            Color.Turquoise,
+            Color.Black,
+            Color.DimGray,
+        };
 
         Land[,] land;
 
@@ -101,8 +101,7 @@ namespace MineSweeper
                             b.ForeColor = b.BackColor;
                             flags--;
                             b.Text = land[p.X, p.Y].Count.ToString();
-                        }
-                        //smartFlag();
+                        }                        
                     }
                     LblMineCounter.Text = $"bombs: {mines - flags}";
                 }
@@ -351,7 +350,6 @@ namespace MineSweeper
                             land[x, y].Btn.ForeColor = Color.Red;
                             flags++;
                             land[x, y].Btn.Text = "F";
-
                         }
                     }
                 }
@@ -416,7 +414,6 @@ namespace MineSweeper
         {
             public Button Btn { get; set; }
             public int Count { get; set; }
-            //public bool IsFlagged { get; set; }
             public bool IsMine { get; set; }
         }
     }
