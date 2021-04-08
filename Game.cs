@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace MineSweeper
@@ -10,12 +11,12 @@ namespace MineSweeper
 		{
 			public Button land { get; set; }
 			public int gCost { get; set; }
-			//public int hCost { get; set; }
+			public int hCost { get; set; }
 			public Button parent { get; set; }
 		}
 
 		Random rand = new Random();
-		int w = 13, h = 5, s = 34, m = 0;
+		int w = 13, h = 5, s = 34;
 		int wMult = 3;
 		Button b;
 		readonly Color hidden = Color.LightGray;
@@ -25,11 +26,13 @@ namespace MineSweeper
 		int gCost = 0;
 		Point end;
 		Node[,] nodes;
+		List<Point> path;
 
 		//Initilize
 		public Game()
 		{
 			InitializeComponent();
+			path = new List<Point>();
 			end = new Point(w - 1, h - 1);
 			nodes = new Node[w, h];
 
@@ -47,13 +50,31 @@ namespace MineSweeper
 						Tag = new Point(x, y),
 					};
 					nodes[x, y].gCost = 0;
+					nodes[x, y].hCost = (int)(Math.Round(Math.Sqrt(Math.Pow(x - end.X, 2) + Math.Pow(y - end.Y, 2)), 2) * 10);
 					Controls.Add(nodes[x, y].land);
-                    nodes[x, y].land.MouseDown += Land_MouseDown; ;
+                    nodes[x, y].land.MouseDown += Land_MouseDown;
 				}
 			}
 			nodes[0, 0].land.BackColor = open;
+			//autoDo();
 			Game_SizeChanged(new object(), new EventArgs());
 		}
+
+		private void autoDo()
+        {
+			int opened = 0;
+			Node best = new Node();
+            foreach (Node n in nodes)
+            {
+				if (n.land.BackColor == open)
+					opened++;
+					if (n.gCost + n.hCost < best.gCost + best.hCost || best.gCost == 0)
+						best = n;
+            }
+			LeftClick(best.land);
+			if ((Point)best.land.Tag != end)
+					autoDo();
+        }
 
 		private void Land_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -109,9 +130,31 @@ namespace MineSweeper
 						}
 
 						//prints the gCost
-						nodes[n.X, n.Y].land.Text = $"{nodes[n.X, n.Y].gCost + (int)(Math.Round(Math.Sqrt(Math.Pow(n.X - end.X, 2) + Math.Pow(n.Y - end.Y, 2)), 2) * 10)}:{((Point)nodes[n.X, n.Y].parent.Tag).X},{((Point)nodes[n.X, n.Y].parent.Tag).Y}";
+						nodes[n.X, n.Y].land.Text = $"{nodes[n.X, n.Y].gCost + nodes[n.X, n.Y].hCost}";
 					}
 			}
+			if (p == end)
+			{
+				Node Current = nodes[p.X, p.Y];
+				
+				while (!(Current.parent is null))
+				{
+					path.Add((Point)Current.land.Tag);
+					Current.land.BackColor = Color.Yellow;
+					Point pp = (Point)Current.parent.Tag;
+					Current = nodes[pp.X, pp.Y];
+				}
+				path.Add((Point)Current.land.Tag);
+				Current.land.BackColor = Color.Yellow;
+
+				string makeStr = "";
+                foreach (Point str in path)
+                {
+					makeStr += $"({str.X}, {str.Y}),";
+				}
+				MessageBox.Show(makeStr);
+			}
+
 		}
 		void computegCost(Point n, Button parent, bool diag)
         {
