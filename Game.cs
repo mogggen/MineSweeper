@@ -74,7 +74,7 @@ namespace MineSweeper
 
                 if (MouseButtons == MouseButtons.Left)
                 {
-                    if (b.BackColor == hidden)
+                    if (b.BackColor == hidden && b.Text != "F")
                         LeftClick();
                     else if (b.BackColor == Revealed(0))
                         SmartClick(land[((Point)b.Tag).X, ((Point)b.Tag).Y]);
